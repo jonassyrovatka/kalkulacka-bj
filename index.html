@@ -233,7 +233,7 @@
                         </label>
                         <label id="penzRenteaOnlineWrap" class="flex items-center space-x-3 cursor-pointer hidden">
                             <input type="checkbox" id="penzRenteaOnline" class="w-5 h-5 text-teal-600 rounded">
-                            <span class="text-sm font-semibold text-teal-900">Sjednáno přes portál/email (Krácení 50 %)</span>
+                            <span class="text-sm font-semibold text-teal-900">Sjednáno přes portál/email (Krácení provize 50 %)</span>
                         </label>
                         <label id="penzAllianzTfCutWrap" class="flex items-center space-x-3 cursor-pointer hidden">
                             <input type="checkbox" id="penzAllianzTfCut" class="w-5 h-5 text-teal-600 rounded">
@@ -275,6 +275,11 @@
                         </div>
                     </div>
 
+                    <div id="penzAlertMax" class="hidden flex items-start gap-2 text-fuchsia-700 bg-fuchsia-50 p-3 rounded-lg text-sm border border-fuchsia-200 mt-4">
+                        <i data-lucide="info" class="shrink-0 mt-0.5 w-[18px] h-[18px]"></i>
+                        <p class="font-medium">Výpočet dosáhl <b>maximálního limitu provize</b> (zastropováno legislativou nebo pravidly penzijní společnosti).</p>
+                    </div>
+
                     <div id="penzAlertErr" class="hidden flex items-start gap-2 text-red-600 bg-red-50 p-4 rounded-xl text-sm border border-red-200 shadow-sm mt-4">
                         <i data-lucide="alert-circle" class="shrink-0 mt-0.5 w-[18px] h-[18px]"></i>
                         <p id="penzAlertErrText" class="font-semibold"></p>
@@ -282,13 +287,21 @@
                 </div>
 
                 <div id="penzResultBlock" class="bg-slate-50 border-t border-slate-200 p-6 fade-in hidden">
-                    <div class="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-teal-100 shadow-md relative overflow-hidden">
-                        <span class="text-slate-500 font-bold text-xs uppercase tracking-widest mb-2 z-10">Získané Bankovní Jednotky</span>
-                        <div class="flex items-baseline gap-2 z-10">
-                            <span id="penzResMain" class="text-5xl sm:text-6xl font-extrabold tracking-tight text-slate-900">0</span>
-                            <span class="font-bold text-xl text-teal-600">BJ</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-teal-100 shadow-md relative overflow-hidden">
+                            <div class="absolute -left-6 -top-6 opacity-5"><i data-lucide="piggy-bank" class="text-teal-900 w-[100px] h-[100px]" stroke-width="1.5"></i></div>
+                            <span class="text-slate-500 font-bold text-xs uppercase tracking-widest mb-2 z-10 text-center">Získatelské jednotky</span>
+                            <div class="flex items-baseline gap-2 z-10"><span id="penzResZ" class="text-4xl sm:text-5xl font-extrabold text-slate-900">0</span><span class="font-bold text-lg text-teal-600">BJ</span></div>
                         </div>
-                        <button onclick="addCurrentToPlan('penze')" class="mt-4 px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold flex items-center transition-colors z-10 shadow-sm">
+                        <div class="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-fuchsia-100 shadow-md relative overflow-hidden">
+                            <div class="absolute -right-6 -bottom-6 opacity-5"><i data-lucide="user-check" class="text-fuchsia-900 w-[100px] h-[100px]" stroke-width="1.5"></i></div>
+                            <span class="text-slate-500 font-bold text-xs uppercase tracking-widest mb-2 z-10 text-center">Kariérové jednotky</span>
+                            <div class="flex items-baseline gap-2 z-10"><span id="penzResK" class="text-4xl sm:text-5xl font-extrabold text-slate-900">0</span><span class="font-bold text-lg text-fuchsia-600">KBJ</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center mt-4">
+                        <button onclick="addCurrentToPlan('penze')" class="px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold flex items-center transition-colors shadow-sm">
                             <i data-lucide="plus-circle" class="mr-2 w-5 h-5"></i> Přidat do plánu
                         </button>
                     </div>
@@ -568,7 +581,7 @@
             amundi: [{ v: 'online_bezne', l: 'Běžné fondy' }, { v: 'online_premium', l: 'Premium účet' }, { v: 'online_fki', l: 'Obhospodařování (FKI)' }],
             cool: [{ v: 'dyn', l: 'Dynamická' }, { v: 'vyv', l: 'Vyvážená' }, { v: 'kon', l: 'Konzervativní' }],
             conseq: [{ v: 'akcie', l: 'Akciové fondy' }, { v: 'nemov', l: 'Nemovitostní a smíšené' }, { v: 'dluh', l: 'Dluhopisové fondy' }],
-            partners_inv: [{ v: 'global', l: 'Simplea Global Equity ESG' }, { v: 'double', l: 'Double Speed' }, { v: 'div', l: 'Partners Dividend' }, { v: 'stars', l: 'Partners 7 Stars' }, { v: 'eurobond', l: 'Simplea Euro Bond' }, { v: 'bond', l: 'Partners Bond' }, { v: 'uni6', l: 'Universe 6' }, { v: 'uni10', l: 'Universe 10' }, { v: 'uni13', l: 'Universe 13' }, { v: 'rezerva', l: 'Rezerva' }, { v: 'alt', l: 'Alternative Strategies (FKI)' }],
+            partners_inv: [{ v: 'global', l: 'Simplea Global Equity ESQ' }, { v: 'double', l: 'Double Speed' }, { v: 'div', l: 'Partners Dividend' }, { v: 'stars', l: 'Partners 7 Stars' }, { v: 'eurobond', l: 'Simplea Euro Bond' }, { v: 'bond', l: 'Partners Bond' }, { v: 'uni6', l: 'Universe 6' }, { v: 'uni10', l: 'Universe 10' }, { v: 'uni13', l: 'Universe 13' }, { v: 'rezerva', l: 'Rezerva' }, { v: 'alt', l: 'Alternative Strategies (FKI)' }],
             uniqa: [{ v: 'dyn', l: 'Dynamická (Progresivní)' }, { v: 'vyv', l: 'Vyvážená' }, { v: 'kon', l: 'Konzervativní' }],
             default: [{ v: 'default', l: 'Základní fondy' }]
         };
@@ -615,7 +628,7 @@
             conseq: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}, {id: 'tf_inc', l: 'TF - Navýšení příspěvku'}, {id: 'onetime', l: 'DPS - Jednorázový/Převod'}],
             generali: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}, {id: 'tf_inc', l: 'TF - Navýšení příspěvku'}, {id: 'onetime', l: 'DPS a TF - Jednorázový vklad'}, {id: 'transfer', l: 'Interní převod z TF do DPS (Navýšení)'}],
             nn: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}, {id: 'tf_inc', l: 'TF - Navýšení příspěvku'}, {id: 'onetime', l: 'Převod prostředků do TF z jiné PS'}],
-            rentea: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}],
+            rentea: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}, {id: 'transfer', l: 'Převod z jiné PS (DPS)'}],
             uniqa: [{id: 'dps_new', l: 'DPS - Nová/Navýšení'}, {id: 'tf_inc', l: 'TF - Navýšení'}],
             allianz: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}, {id: 'tf_inc', l: 'TF - Navýšení příspěvku'}]
         };
@@ -632,7 +645,7 @@
         const uInvArr = [0, 0, 0, 0, 2.143, 2.143, 3.571, 3.929, 4.286, 5.714, 5.714, 7.143, 7.500, 7.857, 8.214, 9.286, 9.643, 11.071, 11.429, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786];
         const uSemiRiz = [0, 0, 0, 0, 6.071, 7.143, 8.214, 9.643, 10.714, 11.786, 13.214, 14.286, 15.357, 16.786, 17.857, 18.929, 20.357, 21.429, 22.500, 23.929, 25.0, 26.071, 27.5, 28.571, 29.643, 31.071, 32.143, 33.214, 34.643, 35.714];
 
-        // Helpers - Upraveno na fixní 2 desetinná místa!
+        // Helpers - Upraveno na fixní 2 desetinná místa
         const fC = (num, min = 2) => Number(num || 0).toLocaleString('cs-CZ', { minimumFractionDigits: min, maximumFractionDigits: 2 });
         
         const getArrVal = (arr, d) => {
@@ -1139,10 +1152,17 @@
             const one = parseFloat(penzState.amountOneTime) || 0;
 
             let bj = 0;
+            let kbj = 0;
             let err = null;
+            let isCapped = false;
+            
+            // Strop je legislativní. 7 % z průměrné mzdy. Pro rok 2025 je to cca 14,524 BJ.
+            const PENZE_MAX_BJ = 14.524; 
+            let localMaxBJ = PENZE_MAX_BJ; 
 
             if (penzState.inst === 'conseq') {
                 if (penzState.type === 'dps_new' || penzState.type === 'dps_inc') {
+                    localMaxBJ = 10.596;
                     if (part > 0) {
                         if (part < 300) bj += (part / 100) * 0.357;
                         else if (penzState.type === 'dps_new' && part < 1000) bj += (part / 100) * 0.714;
@@ -1152,6 +1172,7 @@
                     if (emp > 0) bj += (emp / 100) * 0.005;
                     if (penzState.conseqGarance) bj += (part / 100) * 8.571;
                 } else if (penzState.type === 'tf_inc') {
+                    localMaxBJ = 3.595;
                     let tot = part + emp;
                     bj += age < 50 ? (tot / 1000) * 3.571 : (tot / 1000) * 1.786;
                 } else if (penzState.type === 'onetime') {
@@ -1161,25 +1182,34 @@
             else if (penzState.inst === 'generali') {
                 if (penzState.type === 'dps_new') {
                     if (penzState.genFund === 'konz') {
+                        localMaxBJ = 3.571;
                         bj += age <= 70 ? (part / 1000) * 3.571 : 0.714;
                     } else { // ostatni
                         if (part >= 100 && part < 300) {
                             bj += age <= 70 ? (part / 1000) * 3.571 : 0.714;
                         } else if (part >= 300) {
-                            bj += age <= 50 ? 13.392 : (age <= 70 ? 3.571 : 0.714);
+                            bj += age <= 50 ? 13.392 : (age <= 70 ? 3.571 : 0.714); // Zahrnuje už rovnou 9.821 + bonus 3.571
                         }
                     }
                     if (emp > 0 && age <= 55) bj += 2.500;
-                } else if (penzState.type === 'dps_inc' || penzState.type === 'tf_inc') {
-                    bj += age <= 70 ? (part / 1000) * 3.571 : 0;
+                } else if (penzState.type === 'dps_inc' || penzState.type === 'tf_inc' || penzState.type === 'transfer') {
+                    localMaxBJ = 3.571;
+                    if (penzState.type === 'transfer') {
+                        bj += (age >= 18 && age <= 50) ? (one / 1000) * 3.571 : 0;
+                    } else {
+                        bj += age <= 70 ? (part / 1000) * 3.571 : 0;
+                    }
                 } else if (penzState.type === 'onetime') {
                     bj += age <= 70 ? (one / 100000) * 3.571 : 0;
-                } else if (penzState.type === 'transfer') {
-                    // Tady to bereme jako navýšení převedené sumy z příspěvků
-                    bj += (age >= 18 && age <= 50) ? (one / 1000) * 3.571 : 0;
                 }
             }
             else if (penzState.inst === 'nn') {
+                if (penzState.type === 'dps_new' || penzState.type === 'dps_inc') {
+                    localMaxBJ = 10.607;
+                } else if (penzState.type === 'tf_inc' || penzState.type === 'onetime') {
+                    localMaxBJ = 3.595;
+                }
+
                 if (penzState.type === 'dps_new') {
                     if (penzState.nnFromTf) {
                         bj += 1.429;
@@ -1197,6 +1227,7 @@
             }
             else if (penzState.inst === 'rentea') {
                 if (penzState.type === 'dps_new') {
+                    localMaxBJ = 11.964;
                     if (part >= 100 && part < 500) bj += 1.250;
                     else if (part >= 500 && part < 1000) bj += 5.000;
                     else if (part >= 1000) bj += 11.964;
@@ -1206,10 +1237,22 @@
                     } else if (part >= 700) {
                         bj += penzState.renteaOnline ? 1.250 : 2.500;
                     }
+                } else if (penzState.type === 'transfer') {
+                    // Specifický převod z jiné PS u Rentea má odlišené BJ a KBJ
+                    if (part >= 500) {
+                        bj = 2.25;
+                        kbj = 11.25;
+                    } else if (part >= 100) {
+                        bj = 1.25; // Standardní záloha při menším vkladu
+                        kbj = 1.25;
+                    }
                 }
-                // Zaměstnavatel 0
             }
             else if (penzState.inst === 'uniqa') {
+                if (penzState.type === 'dps_new') {
+                    localMaxBJ = 10.606;
+                }
+                
                 let tot = part + emp;
                 if (penzState.type === 'dps_new') {
                     if (age <= 18) {
@@ -1231,6 +1274,10 @@
                 }
             }
             else if (penzState.inst === 'allianz') {
+                if (penzState.type === 'dps_new' || penzState.type === 'dps_inc') {
+                    localMaxBJ = 12.036;
+                }
+
                 if (penzState.type === 'dps_new') {
                     let p100 = part / 100;
                     if (age <= 15) bj += p100 * 1.429; else if (age <= 49) bj += p100 * 1.000; else if (age <= 57) bj += p100 * 0.536; else bj += p100 * 0.179;
@@ -1252,6 +1299,25 @@
                 }
             }
 
+            // Sync KBJ (pokud nebylo manuálně odděleno, jako např. u Rentea převodu)
+            if (kbj === 0 && bj > 0) {
+                if (penzState.inst === 'rentea' && penzState.type === 'transfer' && part >= 500) {
+                    kbj = 11.25; 
+                } else {
+                    kbj = bj;
+                }
+            }
+
+            // Aplikace specifických limitů pro danou situaci/společnost
+            if (bj > localMaxBJ) { bj = localMaxBJ; isCapped = true; }
+            if (kbj > localMaxBJ && (penzState.inst !== 'rentea' || penzState.type !== 'transfer')) { kbj = localMaxBJ; }
+
+            // OCHRANA PROTI MAXIMÁLNÍ ZÁKONNÉ PROVIZI
+            if (bj > PENZE_MAX_BJ) { bj = PENZE_MAX_BJ; isCapped = true; }
+            if (kbj > PENZE_MAX_BJ) { kbj = PENZE_MAX_BJ; }
+
+            document.getElementById('penzAlertMax').style.display = isCapped ? 'flex' : 'none';
+
             if (err) {
                 document.getElementById('penzAlertErr').style.display = 'flex';
                 document.getElementById('penzAlertErrText').textContent = err;
@@ -1260,9 +1326,10 @@
             } else {
                 document.getElementById('penzAlertErr').style.display = 'none';
                 document.getElementById('penzResultBlock').style.display = 'block';
-                document.getElementById('penzResMain').textContent = fC(bj);
+                document.getElementById('penzResZ').textContent = fC(bj);
+                document.getElementById('penzResK').textContent = fC(kbj);
                 
-                // Připravit data pro přidání do plánu (KBJ=BJ u penzí)
+                // Připravit data pro přidání do plánu 
                 const instName = ePenzInst.options[ePenzInst.selectedIndex].text;
                 const prodName = ePenzType.options[ePenzType.selectedIndex].text;
                 currentPenzResult = {
@@ -1270,7 +1337,7 @@
                     title: `Penze: ${instName}`,
                     subtitle: `${prodName}`,
                     bj: bj,
-                    kbj: bj 
+                    kbj: kbj 
                 };
             }
         }
