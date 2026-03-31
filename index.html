@@ -1233,10 +1233,10 @@
                     else if (part >= 500 && part < 1000) kbj = 5.000;
                     else if (part >= 1000) kbj = 11.964;
                     
-                    // Získatelské jsou 1/5 z kariérových (výplata rozložena do 5 let)
+                    // Nová smlouva: Získatelské jsou 1/5 z kariérových (výplata rozložena do 5 let)
                     bj = kbj / 5;
                 } else if (penzState.type === 'dps_inc') {
-                    // Navýšení
+                    // Navýšení: Zde se nedělí 5, BJ = KBJ
                     if (part >= 200 && part < 700) {
                         kbj = (part / 100) * 0.357;
                     } else if (part >= 700) {
@@ -1244,9 +1244,9 @@
                     }
                     if (penzState.renteaOnline) kbj *= 0.5;
                     
-                    bj = kbj / 5;
+                    bj = kbj; 
                 } else if (penzState.type === 'transfer') {
-                    // Specifický převod z jiné PS (Kariérové jsou podstatně vyšší)
+                    // Převod: Zůstává zachováno dělení 5 (2.25 BJ vs 11.25 KBJ)
                     if (part >= 500) {
                         kbj = 11.25;
                         bj = 2.25; 
