@@ -6,7 +6,6 @@
     <title>Kalkulačka bankovních jednotek</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
@@ -28,26 +27,30 @@
 
     <div class="max-w-2xl w-full relative">
     
-    <div class="bg-white p-2 rounded-2xl shadow-sm mb-6 flex flex-wrap justify-center border border-slate-200 gap-1 sm:gap-2">
-    <button id="tab-invest" onclick="setAppMode('invest')" class="px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md">
-        <i data-lucide="trending-up" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Investice
-    </button>
-    <button id="tab-insurance" onclick="setAppMode('insurance')" class="px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50">
-        <i data-lucide="shield" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Životní pojištění
-    </button>
-    <button id="tab-loans" onclick="setAppMode('loans')" class="px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50">
-        <i data-lucide="home" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Úvěry
-    </button>
-    
-    <button id="tab-logout" onclick="logoutApp()" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-red-50 text-red-600 hover:bg-red-500 hover:text-white border border-red-100 text-[10px] sm:text-xs uppercase tracking-tight">
-        <i data-lucide="log-out" class="mr-1.5 w-[14px] h-[14px]"></i> Odhlásit
-    </button>
-</div>
+        <div class="bg-white p-2 rounded-2xl shadow-sm mb-6 flex flex-wrap justify-center border border-slate-200 gap-1 sm:gap-2">
+            <button id="tab-invest" onclick="setAppMode('invest')" class="px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md">
+                <i data-lucide="trending-up" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Investice
+            </button>
+            <button id="tab-insurance" onclick="setAppMode('insurance')" class="px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50">
+                <i data-lucide="shield" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Životko
+            </button>
+            <button id="tab-loans" onclick="setAppMode('loans')" class="px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50">
+                <i data-lucide="home" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Úvěry
+            </button>
+            <button id="tab-plan" onclick="setAppMode('plan')" class="px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 relative">
+                <i data-lucide="briefcase" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Plán
+                <span id="planBadge" class="ml-1.5 bg-slate-200 text-slate-600 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+            </button>
+            
+            <button id="tab-logout" onclick="logoutApp()" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-red-50 text-red-600 hover:bg-red-500 hover:text-white border border-red-100 text-[10px] sm:text-xs uppercase tracking-tight ml-auto">
+                <i data-lucide="log-out" class="mr-1.5 w-[14px] h-[14px]"></i> Odhlásit
+            </button>
+        </div>
 
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200 fade-in">
             <div id="header-card" class="p-6 text-white border-b flex items-center gap-4 transition-colors bg-slate-900 border-emerald-800">
                 <div id="header-icon-bg" class="p-3 rounded-xl shadow-lg bg-emerald-500 shadow-emerald-500/30">
-                    <i data-lucide="calculator" class="text-white w-7 h-7"></i>
+                    <i data-lucide="calculator" id="header-icon" class="text-white w-7 h-7"></i>
                 </div>
                 <div>
                     <h1 class="text-2xl font-bold tracking-tight text-white">Kalkulačka bankovních jednotek</h1>
@@ -171,6 +174,9 @@
                             <span id="invResMain" class="text-5xl sm:text-6xl font-extrabold tracking-tight text-slate-900">0</span>
                             <span class="font-bold text-xl text-emerald-600">BJ</span>
                         </div>
+                        <button onclick="addCurrentToPlan('invest')" class="mt-4 px-6 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold flex items-center transition-colors z-10 shadow-sm">
+                            <i data-lucide="plus-circle" class="mr-2 w-5 h-5"></i> Přidat do plánu
+                        </button>
                         <div class="mt-5 w-full bg-slate-50 rounded-xl p-4 border border-slate-100 text-sm z-10">
                             <div class="flex justify-between mb-1 border-b border-slate-200 pb-1"><span class="text-slate-500">Použitý koeficient:</span><span id="invResCoef" class="font-bold text-slate-800">0</span></div>
                             <div class="flex justify-between mb-1 border-b border-slate-200 pb-1"><span class="text-slate-500">Výpočetní základ:</span><span id="invResBase" class="font-bold text-slate-800">0 Kč</span></div>
@@ -279,6 +285,13 @@
                             <div class="flex items-baseline gap-2 z-10"><span id="insResK" class="text-4xl sm:text-5xl font-extrabold text-slate-900">0</span><span class="font-bold text-lg text-indigo-600">KBJ</span></div>
                         </div>
                     </div>
+                    
+                    <div class="flex justify-center mt-4">
+                        <button onclick="addCurrentToPlan('insurance')" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold flex items-center transition-colors shadow-sm">
+                            <i data-lucide="plus-circle" class="mr-2 w-5 h-5"></i> Přidat do plánu
+                        </button>
+                    </div>
+
                     <div class="mt-5 w-full bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-sm">
                         <div class="flex items-center text-slate-700 font-bold mb-3 border-b border-slate-100 pb-2">
                             <i data-lucide="info" class="mr-2 w-4 h-4 text-blue-500"></i> Kontrola výpočtů a vzorců
@@ -338,6 +351,13 @@
                             <div class="flex items-baseline gap-2 z-10"><span id="loanResK" class="text-4xl sm:text-5xl font-extrabold text-slate-900">0</span><span class="font-bold text-lg text-orange-600">KBJ</span></div>
                         </div>
                     </div>
+                    
+                    <div class="flex justify-center mt-4">
+                        <button onclick="addCurrentToPlan('loans')" class="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold flex items-center transition-colors shadow-sm">
+                            <i data-lucide="plus-circle" class="mr-2 w-5 h-5"></i> Přidat do plánu
+                        </button>
+                    </div>
+
                     <div class="mt-5 w-full bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-sm">
                         <div class="flex items-center text-slate-700 font-bold mb-3 border-b border-slate-100 pb-2">
                             <i data-lucide="info" class="mr-2 w-4 h-4 text-amber-500"></i> Kontrola výpočtů
@@ -352,14 +372,41 @@
                 </div>
             </div>
 
+            <div id="section-plan" class="hidden">
+                <div class="p-6 fade-in min-h-[300px] flex flex-col">
+                    <div id="planEmptyState" class="flex flex-col items-center justify-center text-slate-400 py-10 my-auto">
+                        <i data-lucide="briefcase" class="w-16 h-16 mb-4 opacity-50"></i>
+                        <p class="text-lg font-medium">Plán je zatím prázdný</p>
+                        <p class="text-sm mt-1">Přidej produkty pomocí tlačítek "Přidat do plánu".</p>
+                    </div>
+
+                    <div id="planListWrapper" class="hidden flex-col gap-3 flex-grow">
+                        </div>
+
+                    <div id="planSummary" class="hidden mt-6 pt-5 border-t-2 border-slate-200">
+                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Celkové shrnutí klienta</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl flex items-center justify-between">
+                                <span class="font-bold text-indigo-900">Celkem Získatelské</span>
+                                <div class="flex items-baseline gap-1"><span id="planTotalBJ" class="text-2xl font-extrabold text-indigo-700">0</span><span class="text-indigo-600 font-bold text-sm">BJ</span></div>
+                            </div>
+                            <div class="bg-fuchsia-50 border border-fuchsia-100 p-4 rounded-xl flex items-center justify-between">
+                                <span class="font-bold text-fuchsia-900">Celkem Kariérové</span>
+                                <div class="flex items-baseline gap-1"><span id="planTotalKBJ" class="text-2xl font-extrabold text-fuchsia-700">0</span><span class="text-fuchsia-600 font-bold text-sm">KBJ</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="max-w-2xl mx-auto mt-8 mb-2 px-5 sm:px-6 py-4 bg-amber-50/80 border border-amber-200/80 rounded-2xl flex items-start gap-3 text-amber-800 shadow-sm fade-in">
-    <i data-lucide="alert-circle" class="shrink-0 mt-0.5 w-5 h-5 text-amber-600"></i>
-    <p class="text-sm font-medium leading-relaxed">
-        <strong class="font-bold text-amber-900">Důležité upozornění:</strong> Tato kalkulačka je neoficiální a slouží pouze jako orientační pomůcka. Přestože je nastavena s maximální pečlivostí dle platných metodik, výsledky nemusí být z důvodu zaokrouhlování či skrytých pravidel vždy 100% přesné. <span class="underline decoration-amber-300 underline-offset-2 font-semibold">Nespoléhejte na ni prosím absolutně</span>, obzvláště při těsném plánování kariérního povýšení.            
-    </p>
-</div>
+            <i data-lucide="alert-circle" class="shrink-0 mt-0.5 w-5 h-5 text-amber-600"></i>
+            <p class="text-sm font-medium leading-relaxed">
+                <strong class="font-bold text-amber-900">Důležité upozornění:</strong> Tato kalkulačka je neoficiální a slouží pouze jako orientační pomůcka. Přestože je nastavena s maximální pečlivostí dle platných metodik, výsledky nemusí být z důvodu zaokrouhlování či skrytých pravidel vždy 100% přesné. <span class="underline decoration-amber-300 underline-offset-2 font-semibold">Nespoléhejte na ni prosím absolutně</span>, obzvláště při těsném plánování kariérního povýšení.            
+            </p>
+        </div>
 
         <div class="mt-6 mb-6 text-center fade-in flex flex-col items-center">
             
@@ -494,43 +541,146 @@
         let insState = { inst: 'allianz', prod: 'zivot', type: 'pwl', risk: 'velka', rpStr: '1000', rpiStr: '500', durStr: '30' };
         let loanState= { inst: 'csas', prod: 'hypo', amtStr: '2000000' };
 
+        // Proměnné pro plán
+        let clientPlan = [];
+        let currentInvestResult = null;
+        let currentInsResult = null;
+        let currentLoanResult = null;
+
         // === TABS LOGIC ===
         function setAppMode(mode) {
             appMode = mode;
-            ['invest', 'insurance', 'loans'].forEach(m => {
+            ['invest', 'insurance', 'loans', 'plan'].forEach(m => {
                 const isMatch = m === mode;
                 document.getElementById(`section-${m}`).style.display = isMatch ? 'block' : 'none';
                 
                 const btn = document.getElementById(`tab-${m}`);
                 if (isMatch) {
-                    if (m==='invest') btn.className = 'px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md';
-                    if (m==='insurance') btn.className = 'px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all bg-blue-600 text-white shadow-md';
-                    if (m==='loans') btn.className = 'px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all bg-amber-500 text-white shadow-md';
+                    if (m==='invest') btn.className = 'px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md';
+                    if (m==='insurance') btn.className = 'px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all bg-blue-600 text-white shadow-md';
+                    if (m==='loans') btn.className = 'px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all bg-amber-500 text-white shadow-md';
+                    if (m==='plan') btn.className = 'px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all bg-indigo-600 text-white shadow-md';
                 } else {
-                    btn.className = 'px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50';
+                    btn.className = 'px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50';
                 }
             });
 
             const headerCard = document.getElementById('header-card');
             const headerIconBg = document.getElementById('header-icon-bg');
+            const headerIcon = document.getElementById('header-icon');
             const headerSubtitle = document.getElementById('header-subtitle');
 
             if (mode === 'invest') {
                 headerCard.className = 'p-6 text-white border-b flex items-center gap-4 transition-colors bg-slate-900 border-emerald-800';
                 headerIconBg.className = 'p-3 rounded-xl shadow-lg bg-emerald-500 shadow-emerald-500/30';
+                headerIcon.setAttribute('data-lucide', 'calculator');
                 headerSubtitle.className = 'text-sm mt-0.5 font-medium text-emerald-400';
                 headerSubtitle.textContent = 'Automatický výpočet investic';
             } else if (mode === 'insurance') {
                 headerCard.className = 'p-6 text-white border-b flex items-center gap-4 transition-colors bg-slate-900 border-blue-800';
                 headerIconBg.className = 'p-3 rounded-xl shadow-lg bg-blue-600 shadow-blue-600/30';
+                headerIcon.setAttribute('data-lucide', 'calculator');
                 headerSubtitle.className = 'text-sm mt-0.5 font-medium text-blue-400';
                 headerSubtitle.textContent = 'Automatický výpočet pojištění';
-            } else {
+            } else if (mode === 'loans') {
                 headerCard.className = 'p-6 text-white border-b flex items-center gap-4 transition-colors bg-slate-900 border-amber-800';
                 headerIconBg.className = 'p-3 rounded-xl shadow-lg bg-amber-500 shadow-amber-500/30';
+                headerIcon.setAttribute('data-lucide', 'calculator');
                 headerSubtitle.className = 'text-sm mt-0.5 font-medium text-amber-400';
                 headerSubtitle.textContent = 'Automatický výpočet úvěrových jednotek';
+            } else {
+                headerCard.className = 'p-6 text-white border-b flex items-center gap-4 transition-colors bg-slate-900 border-indigo-800';
+                headerIconBg.className = 'p-3 rounded-xl shadow-lg bg-indigo-600 shadow-indigo-600/30';
+                headerIcon.setAttribute('data-lucide', 'briefcase');
+                headerSubtitle.className = 'text-sm mt-0.5 font-medium text-indigo-400';
+                headerSubtitle.textContent = 'Celkové shrnutí portfolia klienta';
             }
+            lucide.createIcons();
+        }
+
+        // === PLÁN KLIENTA LOGIKA ===
+        function addCurrentToPlan(type) {
+            let itemToAdd = null;
+            if (type === 'invest' && currentInvestResult) itemToAdd = {...currentInvestResult};
+            if (type === 'insurance' && currentInsResult) itemToAdd = {...currentInsResult};
+            if (type === 'loans' && currentLoanResult) itemToAdd = {...currentLoanResult};
+
+            if (itemToAdd) {
+                clientPlan.push(itemToAdd);
+                renderPlan();
+                
+                // Vizuální zpětná vazba na záložce
+                const badge = document.getElementById('planBadge');
+                badge.classList.remove('bg-slate-200', 'text-slate-600');
+                badge.classList.add('bg-emerald-500', 'text-white', 'scale-125');
+                setTimeout(() => { badge.classList.remove('scale-125'); }, 300);
+            }
+        }
+
+        function removeFromPlan(index) {
+            clientPlan.splice(index, 1);
+            renderPlan();
+        }
+
+        function renderPlan() {
+            const listWrapper = document.getElementById('planListWrapper');
+            const emptyState = document.getElementById('planEmptyState');
+            const summary = document.getElementById('planSummary');
+            const badge = document.getElementById('planBadge');
+
+            badge.textContent = clientPlan.length;
+
+            if (clientPlan.length === 0) {
+                listWrapper.style.display = 'none';
+                summary.style.display = 'none';
+                emptyState.style.display = 'flex';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            listWrapper.style.display = 'flex';
+            summary.style.display = 'block';
+
+            let totalBJ = 0;
+            let totalKBJ = 0;
+            let html = '';
+
+            clientPlan.forEach((item, index) => {
+                totalBJ += item.bj;
+                totalKBJ += item.kbj;
+                
+                let icon = 'trending-up', colorClass = 'text-emerald-600', bgClass = 'bg-emerald-50';
+                if (item.type === 'insurance') { icon = 'shield'; colorClass = 'text-blue-600'; bgClass = 'bg-blue-50'; }
+                if (item.type === 'loans') { icon = 'home'; colorClass = 'text-amber-600'; bgClass = 'bg-amber-50'; }
+
+                html += `
+                <div class="bg-white border border-slate-200 p-4 rounded-xl shadow-sm flex items-center justify-between gap-4 fade-in">
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <div class="${bgClass} p-2 rounded-lg shrink-0">
+                            <i data-lucide="${icon}" class="${colorClass} w-5 h-5"></i>
+                        </div>
+                        <div class="truncate">
+                            <h4 class="font-bold text-slate-800 text-sm truncate">${item.title}</h4>
+                            <p class="text-xs text-slate-500 truncate">${item.subtitle}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 shrink-0">
+                        <div class="text-right hidden sm:block">
+                            <div class="text-sm font-bold text-slate-800">${fC(item.bj)} BJ</div>
+                            <div class="text-xs text-slate-500">${fC(item.kbj)} KBJ</div>
+                        </div>
+                        <button onclick="removeFromPlan(${index})" class="text-slate-400 hover:text-red-500 transition-colors p-2 bg-slate-50 rounded-lg hover:bg-red-50">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>`;
+            });
+
+            listWrapper.innerHTML = html;
+            document.getElementById('planTotalBJ').textContent = fC(totalBJ);
+            document.getElementById('planTotalKBJ').textContent = fC(totalKBJ);
+            
+            lucide.createIcons();
         }
 
         // === INVESTICE LOGIKA ===
@@ -733,12 +883,9 @@
             // Display Results
             document.getElementById('invEntWrapper').style.display = isFeeBased ? 'block' : 'none';
 
-            // Skrytí Vkladu, pokud se počítá z poplatku
             const eInvAmountWrapper = document.getElementById('invAmountWrapper');
             if (eInvAmountWrapper) eInvAmountWrapper.style.display = isFeeBased ? 'none' : 'block';
 
-            // Skrytí Doby, pokud se počítá z poplatku. 
-            // Výjimka: p === true (vzorec dobu potřebuje)
             const isDurHidden = isFeeBased && !p;
             document.getElementById('invDurWrapper').style.display = isDurHidden ? 'none' : (showSlider ? 'block' : 'none');
 
@@ -750,6 +897,7 @@
                 document.getElementById('invAlertErr').style.display = 'flex';
                 document.getElementById('invAlertErrText').textContent = err;
                 document.getElementById('invResultBlock').style.display = 'none';
+                currentInvestResult = null;
             } else {
                 document.getElementById('invAlertErr').style.display = 'none';
                 document.getElementById('invResultBlock').style.display = 'block';
@@ -757,6 +905,17 @@
                 document.getElementById('invResCoef').textContent = fC(coef);
                 document.getElementById('invResBase').textContent = `${fC(base, 0)} Kč`;
                 document.getElementById('invResFormula').textContent = `Model: (${fC(targetAmount, 0)} / ${base}) × ${coef} ${p ? ` × (${duration} let / 3 roky)` : ''}`;
+                
+                // Připravit data pro přidání do plánu (KBJ=BJ u investic)
+                const instName = eInvInst.options[eInvInst.selectedIndex].text;
+                const prodName = eInvProd.options[eInvProd.selectedIndex].text;
+                currentInvestResult = {
+                    type: 'invest',
+                    title: `Investice: ${instName}`,
+                    subtitle: `${prodName} (${invState.type === 'single' ? 'Jednorázově' : 'Pravidelně'})`,
+                    bj: res,
+                    kbj: res 
+                };
             }
         }
 
@@ -928,6 +1087,7 @@
                 document.getElementById('insAlertErr').style.display = 'flex';
                 document.getElementById('insAlertErrText').textContent = err;
                 document.getElementById('insResultBlock').style.display = 'none';
+                currentInsResult = null;
             } else {
                 document.getElementById('insAlertErr').style.display = 'none';
                 document.getElementById('insResultBlock').style.display = 'block';
@@ -953,6 +1113,17 @@
                     ctrlZInv.style.display = 'none';
                     ctrlKInv.style.display = 'none';
                 }
+
+                // Připravit data pro plán
+                const instName = eInsInst.options[eInsInst.selectedIndex].text;
+                const prodName = eInsProd.options[eInsProd.selectedIndex].text;
+                currentInsResult = {
+                    type: 'insurance',
+                    title: `Pojištění: ${instName}`,
+                    subtitle: `${prodName}`,
+                    bj: zRes,
+                    kbj: kRes 
+                };
             }
         }
 
@@ -1029,6 +1200,17 @@
             } else {
                 noteWrapper.style.display = 'none';
             }
+
+            // Připravit data pro plán
+            const instName = eLoanInst.options[eLoanInst.selectedIndex].text;
+            const prodName = eLoanProd.options[eLoanProd.selectedIndex].text;
+            currentLoanResult = {
+                type: 'loans',
+                title: `Úvěr: ${instName}`,
+                subtitle: `${prodName}`,
+                bj: zRes,
+                kbj: kRes 
+            };
         }
 
         eLoanInst.addEventListener('change', (e) => {
@@ -1048,6 +1230,7 @@
         renderInvest();
         renderInsurance();
         renderLoans();
+        renderPlan();
 
     </script>
 
@@ -1107,15 +1290,13 @@
         }
     });
 
-// Tato řádka je klíčová – zpřístupní funkci tlačítku v HTML
-window.logoutApp = () => {
-    signOut(auth).then(() => {
-        console.log("Uživatel byl odhlášen");
-        // Stránka se automaticky díky onAuthStateChanged přepne zpět na přihlašovací okno
-    }).catch((error) => {
-        alert("Chyba při odhlašování: " + error.message);
-    });
-};
+    window.logoutApp = () => {
+        signOut(auth).then(() => {
+            console.log("Uživatel byl odhlášen");
+        }).catch((error) => {
+            alert("Chyba při odhlašování: " + error.message);
+        });
+    };
     
 </script>
     
