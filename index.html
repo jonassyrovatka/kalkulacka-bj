@@ -1093,6 +1093,21 @@
             errStatus.innerText = "Chyba: Špatné heslo nebo uživatel neexistuje.";
         }
     });
+
+// ... (předchozí kód pro inicializaci Firebase)
+
+import { signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+// Tato řádka je klíčová – zpřístupní funkci tlačítku v HTML
+window.logoutApp = () => {
+    signOut(auth).then(() => {
+        console.log("Uživatel byl odhlášen");
+        // Stránka se automaticky díky onAuthStateChanged přepne zpět na přihlašovací okno
+    }).catch((error) => {
+        alert("Chyba při odhlašování: " + error.message);
+    });
+};
+    
 </script>
 
 </body>
