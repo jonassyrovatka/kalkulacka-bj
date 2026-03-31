@@ -26,20 +26,28 @@
 </head>
 <body class="bg-slate-100 min-h-screen p-4 pb-10 flex flex-col items-center text-slate-800 font-sans">
 
-    <div class="bg-white p-2 rounded-2xl shadow-sm mb-6 flex flex-wrap justify-center border border-slate-200 gap-1 sm:gap-2">
-    <button id="tab-invest" onclick="setAppMode('invest')" class="px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md">
-        <i data-lucide="trending-up" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Investice
-    </button>
-    <button id="tab-insurance" onclick="setAppMode('insurance')" class="px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50">
-        <i data-lucide="shield" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Životní pojištění
-    </button>
-    <button id="tab-loans" onclick="setAppMode('loans')" class="px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50">
-        <i data-lucide="home" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Úvěry
-    </button>
+    <div class="max-w-2xl w-full relative">
     
-    <button id="tab-logout" onclick="logoutApp()" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-red-50 text-red-600 hover:bg-red-500 hover:text-white border border-red-100 text-[10px] sm:text-xs uppercase tracking-tight">
-        <i data-lucide="log-out" class="mr-1.5 w-[14px] h-[14px]"></i> Odhlásit
+    <button onclick="logoutApp()" class="absolute right-0 top-0 px-3 py-2.5 rounded-xl font-bold flex items-center transition-all bg-red-50 text-red-600 hover:bg-red-500 hover:text-white border border-red-100 text-[10px] sm:text-xs uppercase tracking-tight shadow-sm">
+        <i data-lucide="log-out" class="mr-1.5 w-3.5 h-3.5"></i> Odhlásit
     </button>
+
+    <div class="bg-white p-2 rounded-2xl shadow-sm mb-6 flex flex-wrap justify-center border border-slate-200 gap-1 sm:gap-2 mr-24 sm:mr-32">
+        <button id="tab-invest" onclick="setAppMode('invest')" class="px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md">
+            <i data-lucide="trending-up" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Investice
+        </button>
+        <button id="tab-insurance" onclick="setAppMode('insurance')" class="px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50">
+            <i data-lucide="shield" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Životní pojištění
+        </button>
+        <button id="tab-loans" onclick="setAppMode('loans')" class="px-4 sm:px-6 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50">
+            <i data-lucide="home" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Úvěry
+        </button>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200 fade-in">
+        ...
+    </div>
+</div>
 </div>
 
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200 fade-in">
