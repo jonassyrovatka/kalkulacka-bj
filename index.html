@@ -146,7 +146,7 @@
                         </div>
                     </div>
 
-                    <div id="invEntWrapper" class="bg-emerald-50 border border-emerald-300 p-5 rounded-xl mt-4 shadow-sm fade-in hidden">
+                    <div id="invEntWrapper" class="bg-emerald-50 border border-emerald-200 p-5 rounded-xl mt-4 shadow-sm fade-in hidden">
                         <label class="flex items-center text-sm font-bold text-emerald-900 mb-2">
                             <i data-lucide="dollar-sign" class="mr-2 w-4 h-4 text-emerald-600"></i> Vstupní poplatek
                         </label>
@@ -623,7 +623,7 @@
         ];
         loanDataMap.sort((a, b) => a.name.localeCompare(b.name));
 
-        // Data Penze - mapování pro UI
+        // Data Penze
         const penzeProdsMap = {
             conseq: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}, {id: 'tf_inc', l: 'TF - Navýšení příspěvku'}, {id: 'onetime', l: 'DPS - Jednorázový/Převod'}],
             generali: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}, {id: 'tf_inc', l: 'TF - Navýšení příspěvku'}, {id: 'onetime', l: 'DPS a TF - Jednorázový vklad'}, {id: 'transfer', l: 'Interní převod z TF do DPS (Navýšení)'}],
@@ -1121,7 +1121,7 @@
             ePenzType.value = penzState.type;
 
             // UI Options Toggles
-            const isOnetime = penzState.type === 'onetime' || penzState.type === 'transfer';
+            const isOnetime = penzState.type === 'onetime';
             document.getElementById('penzAmountRegularWrap').style.display = isOnetime ? 'none' : 'block';
             document.getElementById('penzAmountOneTimeWrap').style.display = isOnetime ? 'block' : 'none';
 
@@ -1188,7 +1188,7 @@
                         if (part >= 100 && part < 300) {
                             bj += age <= 70 ? (part / 1000) * 3.571 : 0.714;
                         } else if (part >= 300) {
-                            bj += age <= 50 ? 13.392 : (age <= 70 ? 3.571 : 0.714); // Zahrnuje už rovnou 9.821 + bonus 3.571
+                            bj += age <= 50 ? 13.392 : (age <= 70 ? 3.571 : 0.714); 
                         }
                     }
                     if (emp > 0 && age <= 55) bj += 2.500;
@@ -1228,23 +1228,31 @@
             else if (penzState.inst === 'rentea') {
                 if (penzState.type === 'dps_new') {
                     localMaxBJ = 11.964;
-                    if (part >= 100 && part < 500) bj += 1.250;
-                    else if (part >= 500 && part < 1000) bj += 5.000;
-                    else if (part >= 1000) bj += 11.964;
+                    // Kariérové jednotky podle vkladu
+                    if (part >= 100 && part < 500) kbj = 1.250;
+                    else if (part >= 500 && part < 1000) kbj = 5.000;
+                    else if (part >= 1000) kbj = 11.964;
+                    
+                    // Získatelské jsou 1/5 z kariérových (výplata rozložena do 5 let)
+                    bj = kbj / 5;
                 } else if (penzState.type === 'dps_inc') {
+                    // Navýšení
                     if (part >= 200 && part < 700) {
-                        bj += penzState.renteaOnline ? (part / 100) * 0.178 : (part / 100) * 0.357;
+                        kbj = (part / 100) * 0.357;
                     } else if (part >= 700) {
-                        bj += penzState.renteaOnline ? 1.250 : 2.500;
+                        kbj = 2.500;
                     }
+                    if (penzState.renteaOnline) kbj *= 0.5;
+                    
+                    bj = kbj / 5;
                 } else if (penzState.type === 'transfer') {
-                    // Specifický převod z jiné PS u Rentea má odlišené BJ a KBJ
+                    // Specifický převod z jiné PS (Kariérové jsou podstatně vyšší)
                     if (part >= 500) {
-                        bj = 2.25;
                         kbj = 11.25;
+                        bj = 2.25; 
                     } else if (part >= 100) {
-                        bj = 1.25; // Standardní záloha při menším vkladu
                         kbj = 1.25;
+                        bj = 0.25;
                     }
                 }
             }
@@ -1299,22 +1307,17 @@
                 }
             }
 
-            // Sync KBJ (pokud nebylo manuálně odděleno, jako např. u Rentea převodu)
+            // Sync KBJ (pokud nebylo manuálně odděleno jako u Rentea)
             if (kbj === 0 && bj > 0) {
-                if (penzState.inst === 'rentea' && penzState.type === 'transfer' && part >= 500) {
-                    kbj = 11.25; 
-                } else {
-                    kbj = bj;
-                }
+                kbj = bj;
             }
 
-            // Aplikace specifických limitů pro danou situaci/společnost
+            // Aplikace specifických limitů a stropu 7%
             if (bj > localMaxBJ) { bj = localMaxBJ; isCapped = true; }
-            if (kbj > localMaxBJ && (penzState.inst !== 'rentea' || penzState.type !== 'transfer')) { kbj = localMaxBJ; }
+            if (kbj > localMaxBJ && (penzState.inst !== 'rentea')) { kbj = localMaxBJ; }
 
-            // OCHRANA PROTI MAXIMÁLNÍ ZÁKONNÉ PROVIZI
             if (bj > PENZE_MAX_BJ) { bj = PENZE_MAX_BJ; isCapped = true; }
-            if (kbj > PENZE_MAX_BJ) { kbj = PENZE_MAX_BJ; }
+            if (kbj > PENZE_MAX_BJ && (penzState.inst !== 'rentea')) { kbj = PENZE_MAX_BJ; }
 
             document.getElementById('penzAlertMax').style.display = isCapped ? 'flex' : 'none';
 
@@ -1329,7 +1332,6 @@
                 document.getElementById('penzResZ').textContent = fC(bj);
                 document.getElementById('penzResK').textContent = fC(kbj);
                 
-                // Připravit data pro přidání do plánu 
                 const instName = ePenzInst.options[ePenzInst.selectedIndex].text;
                 const prodName = ePenzType.options[ePenzType.selectedIndex].text;
                 currentPenzResult = {
@@ -1399,31 +1401,9 @@
         }
 
         function renderInsurance() {
-            // UI
-            const disableRisk = insState.type === 'semi' || ['allianz', 'metlife', 'nn', 'simplea'].includes(insState.inst) || ['prani_4ln', 'prani_1lg', 'sobestacnost'].includes(insState.prod);
-            eInsRisk.disabled = disableRisk;
-            eInsRisk.className = `w-full bg-slate-50 border border-slate-300 py-3 px-3 rounded-xl focus:ring-2 focus:ring-blue-500 ${disableRisk ? 'opacity-50' : ''}`;
-
-            const hasInv = ['flexi_1fg', 'prani_1lg', 'stastny_zivot'].includes(insState.prod);
-            document.getElementById('insRpiWrapper').style.display = hasInv ? 'block' : 'none';
-            document.getElementById('insRpLabel').textContent = hasInv ? 'Pojistné RIZIKA' : 'Měsíční pojistné celkem';
-            
-            document.getElementById('insDurWrapper1').style.display = hasInv ? 'none' : 'block';
-            document.getElementById('insDurWrapper2').style.display = hasInv ? 'block' : 'none';
-
-            // Values
-            eInsRpStr.value = insState.rpStr;
-            eInsRpiStr.value = insState.rpiStr;
-            eInsDurStrNum1.value = insState.durStr;
-            eInsDurStrRange1.value = insState.durStr;
-            eInsDurStrNum2.value = insState.durStr;
-            eInsDurStrRange2.value = insState.durStr;
-
-            // Calculate
             const rp = parseFloat(insState.rpStr) || 0;
             const rpi = parseFloat(insState.rpiStr) || 0;
             const dur = parseFloat(insState.durStr) || 0;
-
             let zR = 0, zI = 0, kR = 0, kI = 0, err = null;
 
             if (insState.inst === 'allianz') {
@@ -1440,50 +1420,29 @@
                     if (insState.type === 'upfront_pwl') zR = insState.risk === 'mala' ? getPwlVal(28.571, dur, 15) : getPwlVal(62.500, dur, 15);
                     else if (insState.type === 'pwl') zR = insState.risk === 'mala' ? 11.429 : 25.000;
                     else zR = 35.714;
-                } else { 
-                    zR = 10.714; 
-                    if (insState.prod === 'prani_1lg') zI = 1.571; 
-                }
+                } else { zR = 10.714; if (insState.prod === 'prani_1lg') zI = 1.571; }
             } else if (insState.inst === 'metlife') {
                 zR = insState.type === 'pwl' ? 25.0 : getArrVal(mSemi, dur);
             } else if (insState.inst === 'nn') {
-                if (dur >= 2) zR = 14.286; else err = "Pojistná doba musí být minimálně 2 roky.";
+                if (dur >= 2) zR = 14.286; else err = "Doba min 2 roky.";
             } else if (insState.inst === 'simplea') {
-                if (insState.prod === 'pece') { 
-                    if (dur >= 2) zR = 14.286; else err = "Pojistná doba musí být minimálně 2 roky."; 
-                } else { 
-                    zR = insState.type === 'upfront_pwl' ? (dur >= 10 ? 62.500 : (err = "Doba min 10 let", 0)) : (dur === 1 ? 12.500 : 25.000); 
-                }
+                if (insState.prod === 'pece') { if (dur >= 2) zR = 14.286; else err = "Doba min 2 roky."; }
+                else { zR = insState.type === 'upfront_pwl' ? (dur >= 10 ? 62.500 : (err = "Doba min 10 let", 0)) : (dur === 1 ? 12.500 : 25.000); }
             } else if (insState.inst === 'uniqa') {
                 if (insState.prod === 'stastny_zivot') zI = getArrVal(uInvArr, dur);
                 zR = insState.type === 'pwl' ? (insState.risk === 'mala' ? 14.286 : 25.000) : getArrVal(uSemiRiz, dur);
             }
 
-            if (zR === 0 && !err) err = "Chybí pravidla pro tuto kombinaci/dobu.";
-
             kI = zI;
-            
-            if (['orange', 'pece', 'sobestacnost', 'prani_4ln', 'prani_1lg'].includes(insState.prod)) {
-                kR = zR; 
-            } else if (insState.inst === 'allianz') {
-                if (insState.type === 'pwl') { kR = 53.571; }
-                else { kR = getArrVal(aKar, dur); }
-            } else if (insState.inst === 'generali') {
-                kR = ((insState.risk === 'mala' ? 10.714 : 25.0) / 70) * 150;
-            } else if (insState.inst === 'koop' && ['flexi_1fn', 'flexi_1fg'].includes(insState.prod)) {
-                if (insState.type === 'pwl' || insState.type === 'upfront_pwl') { kR = 53.571; }
-                else { kR = getArrVal(sKar, dur); }
-            } else if (insState.inst === 'metlife') {
-                kR = (25.0 / 70) * 150;
-            } else if (insState.inst === 'simplea' && ['simplea2'].includes(insState.prod)) {
-                kR = 53.571; 
-            } else if (insState.inst === 'uniqa' && insState.type === 'pwl') {
-                kR = 53.571; 
-            } else {
-                kR = getArrVal(sKar, dur);
-            }
+            if (['orange', 'pece', 'sobestacnost', 'prani_4ln', 'prani_1lg'].includes(insState.prod)) { kR = zR; }
+            else if (insState.inst === 'allianz') { kR = insState.type === 'pwl' ? 53.571 : getArrVal(aKar, dur); }
+            else if (insState.inst === 'generali') { kR = ((insState.risk === 'mala' ? 10.714 : 25.0) / 70) * 150; }
+            else if (insState.inst === 'koop' && ['flexi_1fn', 'flexi_1fg'].includes(insState.prod)) { kR = (insState.type === 'pwl' || insState.type === 'upfront_pwl') ? 53.571 : getArrVal(sKar, dur); }
+            else if (insState.inst === 'simplea' && insState.prod === 'simplea2') { kR = 53.571; }
+            else if (insState.inst === 'uniqa' && insState.type === 'pwl') { kR = 53.571; }
+            else { kR = getArrVal(sKar, dur); }
 
-            const rpRizY = rp * 12; const rpInvY = hasInv ? (rpi * 12) : 0;
+            const rpRizY = rp * 12; const rpInvY = (['flexi_1fg', 'prani_1lg', 'stastny_zivot'].includes(insState.prod)) ? (rpi * 12) : 0;
             const zRes = ((rpRizY / 10000) * zR) + ((rpInvY / 10000) * zI);
             const kRes = ((rpRizY / 10000) * kR) + ((rpInvY / 10000) * kI);
 
@@ -1498,62 +1457,24 @@
             } else {
                 document.getElementById('insAlertErr').style.display = 'none';
                 document.getElementById('insResultBlock').style.display = 'block';
-                
                 document.getElementById('insResZ').textContent = fC(zRes);
                 document.getElementById('insResK').textContent = fC(kRes);
-                
                 document.getElementById('insCtrlZCoef').textContent = `Riziková složka (Koef. ${fC(zR)}):`;
                 document.getElementById('insCtrlZVal').textContent = `${fC((rpRizY / 10000) * zR)} BJ`;
                 document.getElementById('insCtrlKCoef').textContent = `Riziková složka (Koef. ${fC(kR)}):`;
                 document.getElementById('insCtrlKVal').textContent = `${fC((rpRizY / 10000) * kR)} KBJ`;
 
-                const ctrlZInv = document.getElementById('insCtrlZInv');
-                const ctrlKInv = document.getElementById('insCtrlKInv');
-                if (hasInv) {
-                    ctrlZInv.style.display = 'flex';
-                    document.getElementById('insCtrlZICoef').textContent = `Investiční složka (Koef. ${fC(zI)}):`;
-                    document.getElementById('insCtrlZIVal').textContent = `${fC((rpInvY / 10000) * zI)} BJ`;
-                    ctrlKInv.style.display = 'flex';
-                    document.getElementById('insCtrlKICoef').textContent = `Investiční složka (Koef. ${fC(kI)}):`;
-                    document.getElementById('insCtrlKIVal').textContent = `${fC((rpInvY / 10000) * kI)} KBJ`;
-                } else {
-                    ctrlZInv.style.display = 'none';
-                    ctrlKInv.style.display = 'none';
-                }
-
-                // Připravit data pro plán
                 const instName = eInsInst.options[eInsInst.selectedIndex].text;
-                const prodName = eInsProd.options[eInsProd.selectedIndex].text;
-                currentInsResult = {
-                    type: 'insurance',
-                    title: `Pojištění: ${instName}`,
-                    subtitle: `${prodName}`,
-                    bj: zRes,
-                    kbj: kRes 
-                };
+                currentInsResult = { type: 'insurance', title: `Pojištění: ${instName}`, subtitle: `${eInsProd.options[eInsProd.selectedIndex].text}`, bj: zRes, kbj: kRes };
             }
         }
 
-        eInsInst.addEventListener('change', (e) => {
-            insState.inst = e.target.value;
-            insState.prod = insProductsMap[insState.inst][0].id;
-            if (['max_invest', 'vision'].includes(insState.prod)) insState.type = 'semi'; else insState.type = 'pwl';
-            insState.risk = 'velka';
-            updateInsOptions();
-            renderInsurance();
-        });
-        eInsProd.addEventListener('change', (e) => {
-            insState.prod = e.target.value;
-            if (['max_invest', 'vision'].includes(insState.prod)) insState.type = 'semi'; else insState.type = 'pwl';
-            if (['sobestacnost', 'orange', 'pece'].includes(insState.prod)) insState.durStr = '30';
-            updateInsOptions();
-            renderInsurance();
-        });
+        eInsInst.addEventListener('change', (e) => { insState.inst = e.target.value; updateInsOptions(); renderInsurance(); });
+        eInsProd.addEventListener('change', (e) => { insState.prod = e.target.value; updateInsOptions(); renderInsurance(); });
         eInsType.addEventListener('change', (e) => { insState.type = e.target.value; renderInsurance(); });
         eInsRisk.addEventListener('change', (e) => { insState.risk = e.target.value; renderInsurance(); });
         eInsRpStr.addEventListener('input', (e) => { insState.rpStr = e.target.value; renderInsurance(); });
         eInsRpiStr.addEventListener('input', (e) => { insState.rpiStr = e.target.value; renderInsurance(); });
-        
         syncInputs('insDurStrNum1', 'insDurStrRange1', () => { insState.durStr = eInsDurStrNum1.value; renderInsurance(); });
         syncInputs('insDurStrNum2', 'insDurStrRange2', () => { insState.durStr = eInsDurStrNum2.value; renderInsurance(); });
 
@@ -1565,10 +1486,7 @@
         function updateLoanOptions() {
             const b = loanDataMap.find(x => x.id === loanState.inst) || loanDataMap[0];
             populateSelect(eLoanProd, b.prods);
-            
-            if(!b.prods.find(p => p.id === loanState.prod)) {
-                loanState.prod = b.prods[0].id;
-            }
+            if(!b.prods.find(p => p.id === loanState.prod)) loanState.prod = b.prods[0].id;
             eLoanProd.value = loanState.prod;
         }
 
@@ -1576,71 +1494,27 @@
             const amount = parseFloat(loanState.amtStr) || 0;
             const bnk = loanDataMap.find(b => b.id === loanState.inst) || loanDataMap[0];
             const prd = bnk.prods.find(p => p.id === loanState.prod) || bnk.prods[0];
-
             let zC = prd.z; let kC = prd.k || prd.z; let bs = prd.base || 100000;
-            let zRes = 0; let kRes = 0; let isFixed = false; let note = prd.note || null;
-
-            if (loanState.inst === 'burinka' && loanState.prod === 'obnova' && amount > 0 && amount < 500000) {
-                zRes = 17.857; kRes = 17.857; isFixed = true;
-                note = "Výjimka metodiky: Uplatněna paušální fixní odměna 17,857 BJ (výše úvěru pod 500 000 Kč).";
-            } else {
-                zRes = (amount / bs) * zC; kRes = (amount / bs) * kC;
-            }
-
-            eLoanAmtStr.value = loanState.amtStr;
-            document.getElementById('loanAmtLabel').textContent = prd.isFee ? 'úhrady / poplatku' : 'úvěru';
-            document.getElementById('loanBaseSpan').textContent = fC(bs, 0);
-            document.getElementById('loanBaseText').textContent = prd.isFee ? 'poplatku' : 'výše úvěru';
+            let zRes = (amount / bs) * zC; let kRes = (amount / bs) * kC;
 
             document.getElementById('loanResZ').textContent = fC(zRes);
             document.getElementById('loanResK').textContent = fC(kRes);
-
-            document.getElementById('loanCtrlBaseLabel').textContent = isFixed ? 'Fixní odměna:' : `Základ (na ${fC(bs, 0)} Kč ${prd.isFee ? 'poplatku' : 'úvěru'}):`;
-            document.getElementById('loanCtrlBaseVal').textContent = isFixed ? 'Uplatněn fix' : `${fC(amount, 0)} Kč`;
+            document.getElementById('loanCtrlBaseVal').textContent = `${fC(amount, 0)} Kč`;
             document.getElementById('loanCtrlZCoef').textContent = fC(zC);
             document.getElementById('loanCtrlKCoef').textContent = fC(kC);
 
-            const noteWrapper = document.getElementById('loanNoteWrapper');
-            if (note) {
-                noteWrapper.style.display = 'block';
-                document.getElementById('loanNote').textContent = note;
-            } else {
-                noteWrapper.style.display = 'none';
-            }
-
-            // Připravit data pro plán
-            const instName = eLoanInst.options[eLoanInst.selectedIndex].text;
-            const prodName = eLoanProd.options[eLoanProd.selectedIndex].text;
-            currentLoanResult = {
-                type: 'loans',
-                title: `Úvěr: ${instName}`,
-                subtitle: `${prodName}`,
-                bj: zRes,
-                kbj: kRes 
-            };
+            currentLoanResult = { type: 'loans', title: `Úvěr: ${bnk.name}`, subtitle: `${prd.name}`, bj: zRes, kbj: kRes };
         }
 
-        eLoanInst.addEventListener('change', (e) => {
-            loanState.inst = e.target.value;
-            updateLoanOptions();
-            renderLoans();
-        });
+        eLoanInst.addEventListener('change', (e) => { loanState.inst = e.target.value; updateLoanOptions(); renderLoans(); });
         eLoanProd.addEventListener('change', (e) => { loanState.prod = e.target.value; renderLoans(); });
         eLoanAmtStr.addEventListener('input', (e) => { loanState.amtStr = e.target.value; renderLoans(); });
 
-        // INICIALIZACE PO NAČTENÍ
+        // INICIALIZACE
         populateSelect(ePenzInst, [{v: 'conseq', l: 'Conseq'}, {v: 'generali', l: 'Generali'}, {v: 'nn', l: 'NN'}, {v: 'rentea', l: 'Rentea'}, {v: 'uniqa', l: 'Uniqa'}, {v: 'allianz', l: 'Allianz'}]);
         populateSelect(eLoanInst, loanDataMap);
-        updateInvOptions();
-        updatePenzOptions();
-        updateInsOptions();
-        updateLoanOptions();
-        setAppMode('invest');
-        renderInvest();
-        renderPenz();
-        renderInsurance();
-        renderLoans();
-        renderPlan();
+        updateInvOptions(); updatePenzOptions(); updateInsOptions(); updateLoanOptions();
+        setAppMode('invest'); renderInvest(); renderPenz(); renderInsurance(); renderLoans(); renderPlan();
 
     </script>
 
@@ -1657,7 +1531,6 @@
 </div>
 
 <script type="module">
-    // Importy s plnou adresou (Nutné pro čisté HTML)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
@@ -1672,42 +1545,24 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
-
     const overlay = document.getElementById('login-overlay');
     const form = document.getElementById('login-form');
     const errStatus = document.getElementById('login-error');
 
-    // Sledování uživatele
     onAuthStateChanged(auth, (user) => {
-        if (user) {
-            overlay.style.display = 'none'; // Schovat přihlášení
-        } else {
-            overlay.style.display = 'flex'; // Ukázat přihlášení
-        }
+        if (user) overlay.style.display = 'none';
+        else overlay.style.display = 'flex';
     });
 
-    // Reakce na odeslání formuláře
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
-
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-        } catch (error) {
-            errStatus.style.display = 'block';
-            errStatus.innerText = "Chyba: Špatné heslo nebo uživatel neexistuje.";
-        }
+        try { await signInWithEmailAndPassword(auth, email, password); }
+        catch (error) { errStatus.style.display = 'block'; errStatus.innerText = "Chyba: Špatné heslo nebo uživatel neexistuje."; }
     });
 
-    window.logoutApp = () => {
-        signOut(auth).then(() => {
-            console.log("Uživatel byl odhlášen");
-        }).catch((error) => {
-            alert("Chyba při odhlašování: " + error.message);
-        });
-    };
-    
+    window.logoutApp = () => { signOut(auth); };
 </script>
     
 </body>
