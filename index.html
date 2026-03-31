@@ -25,25 +25,28 @@
 </head>
 <body class="bg-slate-100 min-h-screen p-4 pb-10 flex flex-col items-center text-slate-800 font-sans">
 
-    <div class="max-w-2xl w-full relative">
+    <div class="max-w-3xl w-full relative">
     
         <div class="bg-white p-2 rounded-2xl shadow-sm mb-6 flex flex-wrap justify-center border border-slate-200 gap-1 sm:gap-2">
-            <button id="tab-invest" onclick="setAppMode('invest')" class="px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md">
-                <i data-lucide="trending-up" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Investice
+            <button id="tab-invest" onclick="setAppMode('invest')" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md text-sm sm:text-base">
+                <i data-lucide="trending-up" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> <span class="hidden sm:inline">Investice</span><span class="sm:hidden">Inv.</span>
             </button>
-            <button id="tab-insurance" onclick="setAppMode('insurance')" class="px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50">
-                <i data-lucide="shield" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Životko
+            <button id="tab-penze" onclick="setAppMode('penze')" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 text-sm sm:text-base">
+                <i data-lucide="piggy-bank" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> Penze
             </button>
-            <button id="tab-loans" onclick="setAppMode('loans')" class="px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50">
-                <i data-lucide="home" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Úvěry
+            <button id="tab-insurance" onclick="setAppMode('insurance')" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 text-sm sm:text-base">
+                <i data-lucide="shield" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> Životko
             </button>
-            <button id="tab-plan" onclick="setAppMode('plan')" class="px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 relative">
-                <i data-lucide="briefcase" class="mr-2 hidden sm:block w-[18px] h-[18px]"></i> Plán
-                <span id="planBadge" class="ml-1.5 bg-slate-200 text-slate-600 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
+            <button id="tab-loans" onclick="setAppMode('loans')" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 text-sm sm:text-base">
+                <i data-lucide="home" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> Úvěry
+            </button>
+            <button id="tab-plan" onclick="setAppMode('plan')" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 relative text-sm sm:text-base">
+                <i data-lucide="briefcase" class="mr-1.5 hidden sm:block w-[18px] h-[18px]"></i> Plán
+                <span id="planBadge" class="ml-1 sm:ml-1.5 bg-slate-200 text-slate-600 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
             </button>
             
-            <button id="tab-logout" onclick="logoutApp()" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-red-50 text-red-600 hover:bg-red-500 hover:text-white border border-red-100 text-[10px] sm:text-xs uppercase tracking-tight ml-auto">
-                <i data-lucide="log-out" class="mr-1.5 w-[14px] h-[14px]"></i> Odhlásit
+            <button id="tab-logout" onclick="logoutApp()" class="px-2 sm:px-3 py-2.5 rounded-xl font-bold flex items-center transition-all bg-red-50 text-red-600 hover:bg-red-500 hover:text-white border border-red-100 text-[10px] sm:text-xs uppercase tracking-tight ml-auto">
+                <i data-lucide="log-out" class="w-[14px] h-[14px] sm:mr-1"></i> <span class="hidden sm:inline">Odhlásit</span>
             </button>
         </div>
 
@@ -184,6 +187,110 @@
                                 <span id="invResFormula" class="text-xs font-mono text-slate-500 break-all"></span>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="section-penze" class="hidden">
+                <div class="p-6 space-y-6 fade-in">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="flex items-center text-sm font-semibold text-slate-700">
+                                <i data-lucide="building" class="mr-2 w-4 h-4 text-teal-600"></i> Penzijní společnost
+                            </label>
+                            <select id="penzInst" class="w-full bg-slate-50 border border-slate-300 py-3 px-3 rounded-xl focus:ring-2 focus:ring-teal-500 font-medium">
+                                <option value="conseq">Conseq</option>
+                                <option value="generali">Generali</option>
+                                <option value="nn">NN</option>
+                                <option value="rentea">Rentea</option>
+                                <option value="uniqa">Uniqa</option>
+                                <option value="allianz">Allianz</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="flex items-center text-sm font-semibold text-slate-700">
+                                <i data-lucide="file-text" class="mr-2 w-4 h-4 text-teal-600"></i> Typ operace
+                            </label>
+                            <select id="penzType" class="w-full bg-slate-50 border border-slate-300 py-3 px-3 rounded-xl focus:ring-2 focus:ring-teal-500 font-medium"></select>
+                        </div>
+                    </div>
+
+                    <div id="penzOptionsWrapper" class="bg-teal-50 border border-teal-200 p-4 rounded-xl flex flex-col gap-3 fade-in hidden">
+                        <label id="penzConseqGaranceWrap" class="flex items-center space-x-3 cursor-pointer hidden">
+                            <input type="checkbox" id="penzConseqGarance" class="w-5 h-5 text-teal-600 rounded">
+                            <span class="text-sm font-semibold text-teal-900">Sjednán doplňkový produkt (Garance)</span>
+                        </label>
+                        <div id="penzGenFundWrap" class="hidden flex flex-col">
+                            <span class="text-sm font-semibold text-teal-900 mb-1">Typ fondu Generali</span>
+                            <select id="penzGenFund" class="w-full bg-white border border-teal-300 py-2 px-3 rounded-lg focus:ring-2 focus:ring-teal-500">
+                                <option value="ostatni">Spořící / Vyvážený / Dynamický</option>
+                                <option value="konz">Povinný konzervativní fond</option>
+                            </select>
+                        </div>
+                        <label id="penzNnFromTfWrap" class="flex items-center space-x-3 cursor-pointer hidden">
+                            <input type="checkbox" id="penzNnFromTf" class="w-5 h-5 text-teal-600 rounded">
+                            <span class="text-sm font-semibold text-teal-900">Uzavření DPS ukončením stávajícího PP (TF) u NN</span>
+                        </label>
+                        <label id="penzRenteaOnlineWrap" class="flex items-center space-x-3 cursor-pointer hidden">
+                            <input type="checkbox" id="penzRenteaOnline" class="w-5 h-5 text-teal-600 rounded">
+                            <span class="text-sm font-semibold text-teal-900">Sjednáno přes portál/email (Krácení 50 %)</span>
+                        </label>
+                        <label id="penzAllianzTfCutWrap" class="flex items-center space-x-3 cursor-pointer hidden">
+                            <input type="checkbox" id="penzAllianzTfCut" class="w-5 h-5 text-teal-600 rounded">
+                            <span class="text-sm font-semibold text-teal-900">Smlouva vznikla převodem po 1.5.2001 (Krácení 50 %)</span>
+                        </label>
+                    </div>
+
+                    <hr class="border-slate-200" />
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+                        <div class="space-y-2">
+                            <label class="flex items-center text-sm font-bold text-slate-800">
+                                <i data-lucide="user" class="mr-2 w-4 h-4 text-teal-600"></i> Věk klienta
+                            </label>
+                            <input type="number" id="penzAge" min="0" max="100" value="30" class="w-full bg-white border border-slate-300 text-slate-900 py-3 px-4 rounded-xl focus:ring-2 focus:ring-teal-500 font-bold text-lg shadow-sm" />
+                        </div>
+
+                        <div id="penzAmountRegularWrap" class="space-y-3 fade-in">
+                            <div class="space-y-1">
+                                <label class="flex items-center justify-between text-sm font-bold text-slate-800">
+                                    <span>Příspěvek účastníka (Kč/měs)</span>
+                                </label>
+                                <input type="number" id="penzAmountPart" min="0" value="1000" class="w-full bg-white border border-slate-300 text-slate-900 py-2 px-4 rounded-xl focus:ring-2 focus:ring-teal-500 font-bold text-lg" />
+                                <p id="penzPartHelper" class="text-xs text-slate-500 font-medium">U navýšení zadejte pouze rozdíl (o kolik se navyšuje).</p>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="flex items-center justify-between text-sm font-bold text-slate-800">
+                                    <span>Příspěvek zaměstnavatele (Kč/měs)</span>
+                                </label>
+                                <input type="number" id="penzAmountEmp" min="0" value="0" class="w-full bg-white border border-slate-300 text-slate-900 py-2 px-4 rounded-xl focus:ring-2 focus:ring-teal-500 font-bold text-lg" />
+                            </div>
+                        </div>
+
+                        <div id="penzAmountOneTimeWrap" class="space-y-2 fade-in hidden">
+                            <label class="flex items-center text-sm font-bold text-slate-800">
+                                <i data-lucide="coins" class="mr-2 w-4 h-4 text-teal-600"></i> Jednorázový vklad / Převod (Kč)
+                            </label>
+                            <input type="number" id="penzAmountOneTime" min="0" value="100000" class="w-full bg-white border border-slate-300 text-slate-900 py-3 px-4 rounded-xl focus:ring-2 focus:ring-teal-500 font-bold text-lg shadow-sm" />
+                        </div>
+                    </div>
+
+                    <div id="penzAlertErr" class="hidden flex items-start gap-2 text-red-600 bg-red-50 p-4 rounded-xl text-sm border border-red-200 shadow-sm mt-4">
+                        <i data-lucide="alert-circle" class="shrink-0 mt-0.5 w-[18px] h-[18px]"></i>
+                        <p id="penzAlertErrText" class="font-semibold"></p>
+                    </div>
+                </div>
+
+                <div id="penzResultBlock" class="bg-slate-50 border-t border-slate-200 p-6 fade-in hidden">
+                    <div class="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-teal-100 shadow-md relative overflow-hidden">
+                        <span class="text-slate-500 font-bold text-xs uppercase tracking-widest mb-2 z-10">Získané Bankovní Jednotky</span>
+                        <div class="flex items-baseline gap-2 z-10">
+                            <span id="penzResMain" class="text-5xl sm:text-6xl font-extrabold tracking-tight text-slate-900">0</span>
+                            <span class="font-bold text-xl text-teal-600">BJ</span>
+                        </div>
+                        <button onclick="addCurrentToPlan('penze')" class="mt-4 px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold flex items-center transition-colors z-10 shadow-sm">
+                            <i data-lucide="plus-circle" class="mr-2 w-5 h-5"></i> Přidat do plánu
+                        </button>
                     </div>
                 </div>
             </div>
@@ -377,7 +484,7 @@
                     <div id="planEmptyState" class="flex flex-col items-center justify-center text-slate-400 py-10 my-auto">
                         <i data-lucide="briefcase" class="w-16 h-16 mb-4 opacity-50"></i>
                         <p class="text-lg font-medium">Plán je zatím prázdný</p>
-                        <p class="text-sm mt-1">Přidej produkty pomocí tlačítek "Přidat do plánu".</p>
+                        <p class="text-sm mt-1 text-center">Přidej produkty do plánu pomocí tlačítek<br/>u jednotlivých výpočtů.</p>
                     </div>
 
                     <div id="planListWrapper" class="hidden flex-col gap-3 flex-grow">
@@ -388,11 +495,11 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl flex items-center justify-between">
                                 <span class="font-bold text-indigo-900">Celkem Získatelské</span>
-                                <div class="flex items-baseline gap-1"><span id="planTotalBJ" class="text-2xl font-extrabold text-indigo-700">0</span><span class="text-indigo-600 font-bold text-sm">BJ</span></div>
+                                <div class="flex items-baseline gap-1"><span id="planTotalBJ" class="text-3xl font-extrabold text-indigo-700">0</span><span class="text-indigo-600 font-bold text-sm">BJ</span></div>
                             </div>
                             <div class="bg-fuchsia-50 border border-fuchsia-100 p-4 rounded-xl flex items-center justify-between">
                                 <span class="font-bold text-fuchsia-900">Celkem Kariérové</span>
-                                <div class="flex items-baseline gap-1"><span id="planTotalKBJ" class="text-2xl font-extrabold text-fuchsia-700">0</span><span class="text-fuchsia-600 font-bold text-sm">KBJ</span></div>
+                                <div class="flex items-baseline gap-1"><span id="planTotalKBJ" class="text-3xl font-extrabold text-fuchsia-700">0</span><span class="text-fuchsia-600 font-bold text-sm">KBJ</span></div>
                             </div>
                         </div>
                     </div>
@@ -401,7 +508,7 @@
 
         </div>
 
-        <div class="max-w-2xl mx-auto mt-8 mb-2 px-5 sm:px-6 py-4 bg-amber-50/80 border border-amber-200/80 rounded-2xl flex items-start gap-3 text-amber-800 shadow-sm fade-in">
+        <div class="max-w-3xl mx-auto mt-8 mb-2 px-5 sm:px-6 py-4 bg-amber-50/80 border border-amber-200/80 rounded-2xl flex items-start gap-3 text-amber-800 shadow-sm fade-in">
             <i data-lucide="alert-circle" class="shrink-0 mt-0.5 w-5 h-5 text-amber-600"></i>
             <p class="text-sm font-medium leading-relaxed">
                 <strong class="font-bold text-amber-900">Důležité upozornění:</strong> Tato kalkulačka je neoficiální a slouží pouze jako orientační pomůcka. Přestože je nastavena s maximální pečlivostí dle platných metodik, výsledky nemusí být z důvodu zaokrouhlování či skrytých pravidel vždy 100% přesné. <span class="underline decoration-amber-300 underline-offset-2 font-semibold">Nespoléhejte na ni prosím absolutně</span>, obzvláště při těsném plánování kariérního povýšení.            
@@ -456,7 +563,7 @@
         // Inicializace ikon
         lucide.createIcons();
 
-        // Data
+        // Data Investice
         const invProdsMap = {
             amundi: [{ v: 'online_bezne', l: 'Běžné fondy' }, { v: 'online_premium', l: 'Premium účet' }, { v: 'online_fki', l: 'Obhospodařování (FKI)' }],
             cool: [{ v: 'dyn', l: 'Dynamická' }, { v: 'vyv', l: 'Vyvážená' }, { v: 'kon', l: 'Konzervativní' }],
@@ -466,6 +573,7 @@
             default: [{ v: 'default', l: 'Základní fondy' }]
         };
 
+        // Data Pojištění
         const insProductsMap = {
             allianz: [{ id: 'zivot', name: 'Partners Život' }],
             cpp: [{ id: 'max_life', name: 'Maximum Life' }, { id: 'max_invest', name: 'Maximum Invest' }],
@@ -477,6 +585,7 @@
             uniqa: [{ id: 'zivot_radost', name: 'Život a radost (Pouze riziko)' }, { id: 'stastny_zivot', name: 'Šťastný život (S investicí)' }]
         };
 
+        // Data Úvěry
         const loanDataMap = [
             { id: 'artesa', name: 'ARTESA', prods: [{ id: 'firemni', name: 'Firemní úvěr (Podnikatelský)', z: 3.214 }] },
             { id: 'burinka', name: 'Buřinka (Stavební spořitelna ČS)', prods: [{ id: 'hypo', name: 'Hypoúvěr od Buřinky', z: 5.714 }, { id: 'ss_trend', name: 'Úvěr ze stavebního spoření (+ TREND)', z: 5.000 }, { id: 'nezajisteny', name: 'Nezajištěný úvěr od Buřinky', z: 8.214 }, { id: 'obnova', name: 'Komerční úvěr Obnova pro BD a SVJ', z: 3.571 }] },
@@ -501,6 +610,16 @@
         ];
         loanDataMap.sort((a, b) => a.name.localeCompare(b.name));
 
+        // Data Penze - mapování pro UI
+        const penzeProdsMap = {
+            conseq: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}, {id: 'tf_inc', l: 'TF - Navýšení příspěvku'}, {id: 'onetime', l: 'DPS - Jednorázový/Převod'}],
+            generali: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}, {id: 'tf_inc', l: 'TF - Navýšení příspěvku'}, {id: 'onetime', l: 'DPS a TF - Jednorázový vklad'}, {id: 'transfer', l: 'Interní převod z TF do DPS (Navýšení)'}],
+            nn: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}, {id: 'tf_inc', l: 'TF - Navýšení příspěvku'}, {id: 'onetime', l: 'Převod prostředků do TF z jiné PS'}],
+            rentea: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}],
+            uniqa: [{id: 'dps_new', l: 'DPS - Nová/Navýšení'}, {id: 'tf_inc', l: 'TF - Navýšení'}],
+            allianz: [{id: 'dps_new', l: 'DPS - Nová smlouva'}, {id: 'dps_inc', l: 'DPS - Navýšení příspěvku'}, {id: 'tf_inc', l: 'TF - Navýšení příspěvku'}]
+        };
+
         const aSemi = [3.571, 7.143, 10.714, 14.286, 17.857, 21.429, 25.0, 28.571, 32.143, 35.714];
         const aKar = [5.357, 10.714, 16.071, 21.429, 26.786, 32.143, 37.500, 42.857, 48.214, 53.571];
         const cMala = [0.762, 1.524, 2.286, 3.048, 3.810, 4.571, 5.333, 6.095, 6.857, 7.619, 8.381, 9.143, 9.905, 10.667, 11.429];
@@ -513,8 +632,9 @@
         const uInvArr = [0, 0, 0, 0, 2.143, 2.143, 3.571, 3.929, 4.286, 5.714, 5.714, 7.143, 7.500, 7.857, 8.214, 9.286, 9.643, 11.071, 11.429, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786, 11.786];
         const uSemiRiz = [0, 0, 0, 0, 6.071, 7.143, 8.214, 9.643, 10.714, 11.786, 13.214, 14.286, 15.357, 16.786, 17.857, 18.929, 20.357, 21.429, 22.500, 23.929, 25.0, 26.071, 27.5, 28.571, 29.643, 31.071, 32.143, 33.214, 34.643, 35.714];
 
-        // Helpers
+        // Helpers - Upraveno na fixní 2 desetinná místa!
         const fC = (num, min = 2) => Number(num || 0).toLocaleString('cs-CZ', { minimumFractionDigits: min, maximumFractionDigits: 2 });
+        
         const getArrVal = (arr, d) => {
             if (d < 1) return 0;
             if (d >= arr.length) return arr[arr.length - 1];
@@ -540,28 +660,31 @@
         let invState = { inst: 'amundi', prod: 'online_bezne', type: 'single', fee: 'expres', fund: 'akcie', phase: 'standard', uniqa: false, amountStr: '100000', durStr: '10', entStr: '10000' };
         let insState = { inst: 'allianz', prod: 'zivot', type: 'pwl', risk: 'velka', rpStr: '1000', rpiStr: '500', durStr: '30' };
         let loanState= { inst: 'csas', prod: 'hypo', amtStr: '2000000' };
+        let penzState = { inst: 'conseq', type: 'dps_new', age: '30', amountPart: '1000', amountEmp: '0', amountOneTime: '100000', conseqGarance: false, genFund: 'ostatni', nnFromTf: false, renteaOnline: false, allianzTfCut: false };
 
         // Proměnné pro plán
         let clientPlan = [];
         let currentInvestResult = null;
         let currentInsResult = null;
         let currentLoanResult = null;
+        let currentPenzResult = null;
 
         // === TABS LOGIC ===
         function setAppMode(mode) {
             appMode = mode;
-            ['invest', 'insurance', 'loans', 'plan'].forEach(m => {
+            ['invest', 'penze', 'insurance', 'loans', 'plan'].forEach(m => {
                 const isMatch = m === mode;
                 document.getElementById(`section-${m}`).style.display = isMatch ? 'block' : 'none';
                 
                 const btn = document.getElementById(`tab-${m}`);
                 if (isMatch) {
-                    if (m==='invest') btn.className = 'px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md';
-                    if (m==='insurance') btn.className = 'px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all bg-blue-600 text-white shadow-md';
-                    if (m==='loans') btn.className = 'px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all bg-amber-500 text-white shadow-md';
-                    if (m==='plan') btn.className = 'px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all bg-indigo-600 text-white shadow-md';
+                    if (m==='invest') btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md text-sm sm:text-base';
+                    if (m==='penze') btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-teal-500 text-white shadow-md text-sm sm:text-base';
+                    if (m==='insurance') btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-blue-600 text-white shadow-md text-sm sm:text-base';
+                    if (m==='loans') btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-amber-500 text-white shadow-md text-sm sm:text-base';
+                    if (m==='plan') btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-indigo-600 text-white shadow-md relative text-sm sm:text-base';
                 } else {
-                    btn.className = 'px-3 sm:px-5 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50';
+                    btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 text-sm sm:text-base relative';
                 }
             });
 
@@ -576,6 +699,12 @@
                 headerIcon.setAttribute('data-lucide', 'calculator');
                 headerSubtitle.className = 'text-sm mt-0.5 font-medium text-emerald-400';
                 headerSubtitle.textContent = 'Automatický výpočet investic';
+            } else if (mode === 'penze') {
+                headerCard.className = 'p-6 text-white border-b flex items-center gap-4 transition-colors bg-slate-900 border-teal-800';
+                headerIconBg.className = 'p-3 rounded-xl shadow-lg bg-teal-500 shadow-teal-500/30';
+                headerIcon.setAttribute('data-lucide', 'piggy-bank');
+                headerSubtitle.className = 'text-sm mt-0.5 font-medium text-teal-400';
+                headerSubtitle.textContent = 'Automatický výpočet penzijního spoření';
             } else if (mode === 'insurance') {
                 headerCard.className = 'p-6 text-white border-b flex items-center gap-4 transition-colors bg-slate-900 border-blue-800';
                 headerIconBg.className = 'p-3 rounded-xl shadow-lg bg-blue-600 shadow-blue-600/30';
@@ -602,6 +731,7 @@
         function addCurrentToPlan(type) {
             let itemToAdd = null;
             if (type === 'invest' && currentInvestResult) itemToAdd = {...currentInvestResult};
+            if (type === 'penze' && currentPenzResult) itemToAdd = {...currentPenzResult};
             if (type === 'insurance' && currentInsResult) itemToAdd = {...currentInsResult};
             if (type === 'loans' && currentLoanResult) itemToAdd = {...currentLoanResult};
 
@@ -650,6 +780,7 @@
                 totalKBJ += item.kbj;
                 
                 let icon = 'trending-up', colorClass = 'text-emerald-600', bgClass = 'bg-emerald-50';
+                if (item.type === 'penze') { icon = 'piggy-bank'; colorClass = 'text-teal-600'; bgClass = 'bg-teal-50'; }
                 if (item.type === 'insurance') { icon = 'shield'; colorClass = 'text-blue-600'; bgClass = 'bg-blue-50'; }
                 if (item.type === 'loans') { icon = 'home'; colorClass = 'text-amber-600'; bgClass = 'bg-amber-50'; }
 
@@ -904,7 +1035,7 @@
                 document.getElementById('invResMain').textContent = fC(res);
                 document.getElementById('invResCoef').textContent = fC(coef);
                 document.getElementById('invResBase').textContent = `${fC(base, 0)} Kč`;
-                document.getElementById('invResFormula').textContent = `Model: (${fC(targetAmount, 0)} / ${base}) × ${coef} ${p ? ` × (${duration} let / 3 roky)` : ''}`;
+                document.getElementById('invResFormula').textContent = `Model: (${fC(targetAmount, 0)} / ${base}) × ${fC(coef)} ${p ? ` × (${duration} let / 3 roky)` : ''}`;
                 
                 // Připravit data pro přidání do plánu (KBJ=BJ u investic)
                 const instName = eInvInst.options[eInvInst.selectedIndex].text;
@@ -955,6 +1086,215 @@
         eInvAmountStr.addEventListener('input', (e) => { invState.amountStr = e.target.value; renderInvest(); });
         eInvEntStr.addEventListener('input', (e) => { invState.entStr = e.target.value; renderInvest(); });
         syncInputs('invDurStrNum', 'invDurStrRange', () => { invState.durStr = eInvDurStrNum.value; renderInvest(); });
+
+
+        // === PENZE LOGIKA ===
+        const ePenzInst = document.getElementById('penzInst');
+        const ePenzType = document.getElementById('penzType');
+        const ePenzAge = document.getElementById('penzAge');
+        const ePenzAmountPart = document.getElementById('penzAmountPart');
+        const ePenzAmountEmp = document.getElementById('penzAmountEmp');
+        const ePenzAmountOneTime = document.getElementById('penzAmountOneTime');
+        const ePenzConseqGarance = document.getElementById('penzConseqGarance');
+        const ePenzGenFund = document.getElementById('penzGenFund');
+        const ePenzNnFromTf = document.getElementById('penzNnFromTf');
+        const ePenzRenteaOnline = document.getElementById('penzRenteaOnline');
+        const ePenzAllianzTfCut = document.getElementById('penzAllianzTfCut');
+
+        function updatePenzOptions() {
+            populateSelect(ePenzType, penzeProdsMap[penzState.inst]);
+            const validTypes = penzeProdsMap[penzState.inst].map(o => o.id);
+            if (!validTypes.includes(penzState.type) && validTypes.length > 0) penzState.type = validTypes[0];
+            ePenzType.value = penzState.type;
+
+            // UI Options Toggles
+            const isOnetime = penzState.type === 'onetime' || penzState.type === 'transfer';
+            document.getElementById('penzAmountRegularWrap').style.display = isOnetime ? 'none' : 'block';
+            document.getElementById('penzAmountOneTimeWrap').style.display = isOnetime ? 'block' : 'none';
+
+            // Zobrazit specifiké volby
+            let showOpt = false;
+            document.getElementById('penzConseqGaranceWrap').style.display = 'none';
+            document.getElementById('penzGenFundWrap').style.display = 'none';
+            document.getElementById('penzNnFromTfWrap').style.display = 'none';
+            document.getElementById('penzRenteaOnlineWrap').style.display = 'none';
+            document.getElementById('penzAllianzTfCutWrap').style.display = 'none';
+
+            if (penzState.inst === 'conseq' && (penzState.type === 'dps_new' || penzState.type === 'dps_inc')) { document.getElementById('penzConseqGaranceWrap').style.display = 'flex'; showOpt = true; }
+            if (penzState.inst === 'generali' && penzState.type === 'dps_new') { document.getElementById('penzGenFundWrap').style.display = 'flex'; showOpt = true; }
+            if (penzState.inst === 'nn' && penzState.type === 'dps_new') { document.getElementById('penzNnFromTfWrap').style.display = 'flex'; showOpt = true; }
+            if (penzState.inst === 'rentea' && penzState.type === 'dps_inc') { document.getElementById('penzRenteaOnlineWrap').style.display = 'flex'; showOpt = true; }
+            if (penzState.inst === 'allianz' && penzState.type === 'tf_inc') { document.getElementById('penzAllianzTfCutWrap').style.display = 'flex'; showOpt = true; }
+            
+            document.getElementById('penzOptionsWrapper').style.display = showOpt ? 'flex' : 'none';
+
+            // Helpeři k textu
+            document.getElementById('penzPartHelper').style.display = penzState.type.includes('inc') ? 'block' : 'none';
+        }
+
+        function renderPenz() {
+            const age = parseInt(penzState.age) || 0;
+            const part = parseFloat(penzState.amountPart) || 0;
+            const emp = parseFloat(penzState.amountEmp) || 0;
+            const one = parseFloat(penzState.amountOneTime) || 0;
+
+            let bj = 0;
+            let err = null;
+
+            if (penzState.inst === 'conseq') {
+                if (penzState.type === 'dps_new' || penzState.type === 'dps_inc') {
+                    if (part > 0) {
+                        if (part < 300) bj += (part / 100) * 0.357;
+                        else if (penzState.type === 'dps_new' && part < 1000) bj += (part / 100) * 0.714;
+                        else if (penzState.type === 'dps_new' && part >= 1000) bj += (part / 100) * 1.071;
+                        else if (penzState.type === 'dps_inc' && part >= 300) bj += (part / 100) * 0.714;
+                    }
+                    if (emp > 0) bj += (emp / 100) * 0.005;
+                    if (penzState.conseqGarance) bj += (part / 100) * 8.571;
+                } else if (penzState.type === 'tf_inc') {
+                    let tot = part + emp;
+                    bj += age < 50 ? (tot / 1000) * 3.571 : (tot / 1000) * 1.786;
+                } else if (penzState.type === 'onetime') {
+                    bj += age <= 55 ? (one / 10000) * 0.536 : (one / 10000) * 0.268;
+                }
+            } 
+            else if (penzState.inst === 'generali') {
+                if (penzState.type === 'dps_new') {
+                    if (penzState.genFund === 'konz') {
+                        bj += age <= 70 ? (part / 1000) * 3.571 : 0.714;
+                    } else { // ostatni
+                        if (part >= 100 && part < 300) {
+                            bj += age <= 70 ? (part / 1000) * 3.571 : 0.714;
+                        } else if (part >= 300) {
+                            bj += age <= 50 ? 13.392 : (age <= 70 ? 3.571 : 0.714);
+                        }
+                    }
+                    if (emp > 0 && age <= 55) bj += 2.500;
+                } else if (penzState.type === 'dps_inc' || penzState.type === 'tf_inc') {
+                    bj += age <= 70 ? (part / 1000) * 3.571 : 0;
+                } else if (penzState.type === 'onetime') {
+                    bj += age <= 70 ? (one / 100000) * 3.571 : 0;
+                } else if (penzState.type === 'transfer') {
+                    // Tady to bereme jako navýšení převedené sumy z příspěvků
+                    bj += (age >= 18 && age <= 50) ? (one / 1000) * 3.571 : 0;
+                }
+            }
+            else if (penzState.inst === 'nn') {
+                if (penzState.type === 'dps_new') {
+                    if (penzState.nnFromTf) {
+                        bj += 1.429;
+                    } else {
+                        if (part >= 100 && part < 300) bj += 3.238;
+                        else if (part >= 300) bj += 6.475;
+                    }
+                    if (emp > 0) bj += (emp / 100) * 0.357;
+                } else if (penzState.type === 'dps_inc' || penzState.type === 'tf_inc') {
+                    if (part > 0) bj += (part / 100) * 0.357;
+                    if (emp > 0) bj += (emp / 100) * 0.357;
+                } else if (penzState.type === 'onetime') {
+                    bj += (one / 100) * 0.011;
+                }
+            }
+            else if (penzState.inst === 'rentea') {
+                if (penzState.type === 'dps_new') {
+                    if (part >= 100 && part < 500) bj += 1.250;
+                    else if (part >= 500 && part < 1000) bj += 5.000;
+                    else if (part >= 1000) bj += 11.964;
+                } else if (penzState.type === 'dps_inc') {
+                    if (part >= 200 && part < 700) {
+                        bj += penzState.renteaOnline ? (part / 100) * 0.178 : (part / 100) * 0.357;
+                    } else if (part >= 700) {
+                        bj += penzState.renteaOnline ? 1.250 : 2.500;
+                    }
+                }
+                // Zaměstnavatel 0
+            }
+            else if (penzState.inst === 'uniqa') {
+                let tot = part + emp;
+                if (penzState.type === 'dps_new') {
+                    if (age <= 18) {
+                        if (tot <= 299) bj += 1.786; else if (tot <= 499) bj += 7.425; else if (tot <= 999) bj += 9.016; else bj += 10.607;
+                    } else if (age <= 58) {
+                        if (tot >= 300 && tot <= 499) bj += 7.425; else if (tot <= 999 && tot >= 500) bj += 9.016; else if (tot >= 1000) bj += 10.607;
+                    } else {
+                        if (tot >= 300) bj += 1.786;
+                    }
+                } else if (penzState.type === 'tf_inc') {
+                    if (tot <= 200) {
+                        bj += age <= 60 ? (tot / 100) * 0.179 : (tot / 100) * 0.089;
+                    } else {
+                        if (age <= 30) bj += (tot / 200) * 1.071;
+                        else if (age <= 50) bj += (tot / 200) * 0.929;
+                        else if (age <= 60) bj += (tot / 200) * 0.714;
+                        else bj += (tot / 200) * 0.179;
+                    }
+                }
+            }
+            else if (penzState.inst === 'allianz') {
+                if (penzState.type === 'dps_new') {
+                    let p100 = part / 100;
+                    if (age <= 15) bj += p100 * 1.429; else if (age <= 49) bj += p100 * 1.000; else if (age <= 57) bj += p100 * 0.536; else bj += p100 * 0.179;
+                } else if (penzState.type === 'dps_inc') {
+                    let tot100 = (part + emp) / 100;
+                    if (age <= 15) bj += tot100 * 0.714; else if (age <= 49) bj += tot100 * 0.714; else if (age <= 57) bj += tot100 * 0.357; else bj += tot100 * 0.179;
+                } else if (penzState.type === 'tf_inc') {
+                    let p1 = Math.min(part, 2000) / 100; let p2 = Math.max(0, part - 2000) / 100;
+                    let e1 = Math.min(emp, 1000) / 100; let e2 = Math.max(0, emp - 1000) / 100;
+                    
+                    let pBj = 0, eBj = 0;
+                    if (age >= 18 && age <= 35) { pBj = p1 * 0.536 + p2 * 0.107; eBj = e1 * 0.536 + e2 * 0.107; }
+                    else if (age <= 50) { pBj = p1 * 0.482 + p2 * 0.107; eBj = e1 * 0.482 + e2 * 0.107; }
+                    else if (age <= 55) { pBj = p1 * 0.375 + p2 * 0.107; eBj = e1 * 0.375 + e2 * 0.107; }
+                    else if (age > 55) { pBj = p1 * 0.268 + p2 * 0.107; eBj = e1 * 0.268 + e2 * 0.107; }
+                    
+                    bj = pBj + eBj;
+                    if (penzState.allianzTfCut) bj *= 0.5;
+                }
+            }
+
+            if (err) {
+                document.getElementById('penzAlertErr').style.display = 'flex';
+                document.getElementById('penzAlertErrText').textContent = err;
+                document.getElementById('penzResultBlock').style.display = 'none';
+                currentPenzResult = null;
+            } else {
+                document.getElementById('penzAlertErr').style.display = 'none';
+                document.getElementById('penzResultBlock').style.display = 'block';
+                document.getElementById('penzResMain').textContent = fC(bj);
+                
+                // Připravit data pro přidání do plánu (KBJ=BJ u penzí)
+                const instName = ePenzInst.options[ePenzInst.selectedIndex].text;
+                const prodName = ePenzType.options[ePenzType.selectedIndex].text;
+                currentPenzResult = {
+                    type: 'penze',
+                    title: `Penze: ${instName}`,
+                    subtitle: `${prodName}`,
+                    bj: bj,
+                    kbj: bj 
+                };
+            }
+        }
+
+        ePenzInst.addEventListener('change', (e) => { 
+            penzState.inst = e.target.value; 
+            updatePenzOptions(); 
+            renderPenz(); 
+        });
+        ePenzType.addEventListener('change', (e) => { 
+            penzState.type = e.target.value; 
+            updatePenzOptions(); 
+            renderPenz(); 
+        });
+        ePenzAge.addEventListener('input', (e) => { penzState.age = e.target.value; renderPenz(); });
+        ePenzAmountPart.addEventListener('input', (e) => { penzState.amountPart = e.target.value; renderPenz(); });
+        ePenzAmountEmp.addEventListener('input', (e) => { penzState.amountEmp = e.target.value; renderPenz(); });
+        ePenzAmountOneTime.addEventListener('input', (e) => { penzState.amountOneTime = e.target.value; renderPenz(); });
+        
+        ePenzConseqGarance.addEventListener('change', (e) => { penzState.conseqGarance = e.target.checked; renderPenz(); });
+        ePenzGenFund.addEventListener('change', (e) => { penzState.genFund = e.target.value; renderPenz(); });
+        ePenzNnFromTf.addEventListener('change', (e) => { penzState.nnFromTf = e.target.checked; renderPenz(); });
+        ePenzRenteaOnline.addEventListener('change', (e) => { penzState.renteaOnline = e.target.checked; renderPenz(); });
+        ePenzAllianzTfCut.addEventListener('change', (e) => { penzState.allianzTfCut = e.target.checked; renderPenz(); });
 
 
         // === POJIŠTĚNÍ LOGIKA ===
@@ -1222,12 +1562,15 @@
         eLoanAmtStr.addEventListener('input', (e) => { loanState.amtStr = e.target.value; renderLoans(); });
 
         // INICIALIZACE PO NAČTENÍ
+        populateSelect(ePenzInst, [{v: 'conseq', l: 'Conseq'}, {v: 'generali', l: 'Generali'}, {v: 'nn', l: 'NN'}, {v: 'rentea', l: 'Rentea'}, {v: 'uniqa', l: 'Uniqa'}, {v: 'allianz', l: 'Allianz'}]);
         populateSelect(eLoanInst, loanDataMap);
         updateInvOptions();
+        updatePenzOptions();
         updateInsOptions();
         updateLoanOptions();
         setAppMode('invest');
         renderInvest();
+        renderPenz();
         renderInsurance();
         renderLoans();
         renderPlan();
