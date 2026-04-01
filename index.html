@@ -348,7 +348,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
                         <div class="space-y-2">
                             <label class="flex items-center text-sm font-bold text-slate-800">
-                                <i data-lucide="dollar-sign" class="mr-2 w-4 h-4 text-blue-600"></i> <span id="insRpLabel">Měsíční pojistné celkem</span>&nbsp;(Kč)
+                                <i data-lucide="dollar-sign" class="mr-2 w-4 h-4 text-blue-600"></i> <span id="insRpLabel">Měsíční pojistné celkem</span> (Kč)
                             </label>
                             <input type="number" id="insRpStr" min="0" class="w-full bg-white border border-slate-300 text-slate-900 py-3 px-4 rounded-xl focus:ring-2 focus:ring-blue-500 font-bold text-lg shadow-sm" />
                             <p class="text-xs text-slate-500 mt-1 font-medium">Roční ekvivalent: <b id="insRpEq" class="text-blue-700">0 Kč</b></p>
@@ -452,7 +452,7 @@
                     <hr class="border-slate-200" />
                     <div class="space-y-2">
                         <label class="flex items-center text-sm font-bold text-slate-800">
-                            <i data-lucide="coins" class="mr-2 w-4 h-4 text-amber-600"></i> Výše&nbsp;<span id="loanAmtLabel">úvěru</span>&nbsp;(Kč)
+                            <i data-lucide="coins" class="mr-2 w-4 h-4 text-amber-600"></i> Výše <span id="loanAmtLabel">úvěru</span> (Kč)
                         </label>
                         <input type="number" id="loanAmtStr" class="w-full sm:w-1/2 bg-white border border-slate-300 py-3 px-4 rounded-xl focus:ring-2 focus:ring-amber-500 font-bold text-lg shadow-sm" />
                         <p class="text-xs text-slate-500 mt-1 font-medium">Výpočet BJ se aplikuje na každých <span id="loanBaseSpan">100 000</span> Kč <span id="loanBaseText">výše úvěru</span>.</p>
@@ -672,8 +672,8 @@
         let appMode = 'invest';
 
         let invState = { inst: 'amundi', prod: 'online_bezne', type: 'single', fee: 'expres', fund: 'akcie', phase: 'standard', uniqa: false, amountStr: '100000', durStr: '10', entStr: '10000' };
-        let insState = { inst: 'allianz', prod: 'zivot', type: 'pwl', risk: 'velka', rpStr: '', rpiStr: '', durStr: '20' };
-        let loanState= { inst: '', prod: '', amtStr: '' };
+        let insState = { inst: 'allianz', prod: 'zivot', type: 'pwl', risk: 'velka', rpStr: '1000', rpiStr: '500', durStr: '30' };
+        let loanState= { inst: 'csas', prod: 'hypo', amtStr: '2000000' };
         let penzState = { inst: 'conseq', type: 'dps_new', age: '30', amountPart: '1000', amountEmp: '0', amountOneTime: '100000', conseqGarance: false, genFund: 'ostatni', nnFromTf: false, renteaOnline: false, allianzTfCut: false };
 
         // Proměnné pro plán
@@ -1402,7 +1402,6 @@
         }
 
         function renderInsurance() {
-            
             const rp = parseFloat(insState.rpStr) || 0;
             const rpi = parseFloat(insState.rpiStr) || 0;
             const dur = parseFloat(insState.durStr) || 0;
@@ -1492,60 +1491,22 @@
             eLoanProd.value = loanState.prod;
         }
 
-        // === ZDE ZAČÍNÁ VYLEPŠENÁ VERZE FUNKCE ===
-        async function renderLoans() {
-            eLoanAmtStr.value = loanState.amtStr; // Udrží políčko prázdné
+        function renderLoans() {
+            const amount = parseFloat(loanState.amtStr) || 0;
+            const bnk = loanDataMap.find(b => b.id === loanState.inst) || loanDataMap[0];
+            const prd = bnk.prods.find(p => p.id === loanState.prod) || bnk.prods[0];
+            let zC = prd.z; let kC = prd.k || prd.z; let bs = prd.base || 100000;
+            let zRes = (amount / bs) * zC; let kRes = (amount / bs) * kC;
 
-            const amount = parseFloat(loanState.amtStr);
-
-            // STOPKA: Pokud není zadána částka, nebo je to nula, nic nepočítáme!
-            if (!loanState.amtStr || isNaN(amount) || amount === 0) {
-                document.getElementById('loanCtrlBaseVal').textContent = `0 Kč`;
-                document.getElementById('loanResZ').textContent = "0";
-                document.getElementById('loanResK').textContent = "0";
-                document.getElementById('loanCtrlZCoef').textContent = "0";
-                document.getElementById('loanCtrlKCoef').textContent = "0";
-                currentLoanResult = null; // Aby nešlo do plánu přidat prázdný výpočet
-                return; // Ukončí funkci, takže se dál nevolá žádný server
-            }
-
+            document.getElementById('loanResZ').textContent = fC(zRes);
+            document.getElementById('loanResK').textContent = fC(kRes);
             document.getElementById('loanCtrlBaseVal').textContent = `${fC(amount, 0)} Kč`;
-            
-            // Zobrazíme "načítání", zatímco se data posílají na server
-            document.getElementById('loanResZ').textContent = "...";
-            document.getElementById('loanResK').textContent = "...";
-            document.getElementById('loanCtrlZCoef').textContent = "...";
-            document.getElementById('loanCtrlKCoef').textContent = "...";
+            document.getElementById('loanCtrlZCoef').textContent = fC(zC);
+            document.getElementById('loanCtrlKCoef').textContent = fC(kC);
 
-            try {
-                // Zavoláme náš sejf a pošleme mu aktuální nastavení úvěru
-                const response = await fetch('/.netlify/functions/vypocet', {
-                    method: 'POST',
-                    body: JSON.stringify({ type: 'loans', state: loanState })
-                });
-
-                // Přijmeme čistá hotová čísla ze serveru
-                const data = await response.json();
-
-                // Vypíšeme je do HTML
-                document.getElementById('loanResZ').textContent = fC(data.zRes);
-                document.getElementById('loanResK').textContent = fC(data.kRes);
-                document.getElementById('loanCtrlZCoef').textContent = fC(data.zC);
-                document.getElementById('loanCtrlKCoef').textContent = fC(data.kC);
-
-                // Příprava pro uložení do plánu
-                const bnk = loanDataMap.find(b => b.id === loanState.inst) || loanDataMap[0];
-                const prd = bnk.prods.find(p => p.id === loanState.prod) || bnk.prods[0];
-                currentLoanResult = { type: 'loans', title: `Úvěr: ${bnk.name}`, subtitle: `${prd.name}`, bj: data.zRes, kbj: data.kRes };
-
-            } catch (error) {
-                console.error("Chyba při komunikaci se serverem:", error);
-                document.getElementById('loanResZ').textContent = "Chyba";
-                document.getElementById('loanResK').textContent = "Chyba";
-            }
+            currentLoanResult = { type: 'loans', title: `Úvěr: ${bnk.name}`, subtitle: `${prd.name}`, bj: zRes, kbj: kRes };
         }
-        // === ZDE KONČÍ VYLEPŠENÁ VERZE FUNKCE ===
-        
+
         eLoanInst.addEventListener('change', (e) => { loanState.inst = e.target.value; updateLoanOptions(); renderLoans(); });
         eLoanProd.addEventListener('change', (e) => { loanState.prod = e.target.value; renderLoans(); });
         eLoanAmtStr.addEventListener('input', (e) => { loanState.amtStr = e.target.value; renderLoans(); });
