@@ -1491,9 +1491,23 @@
             eLoanProd.value = loanState.prod;
         }
 
-        // === ZDE ZAČÍNÁ NOVÁ VERZE FUNKCE ===
+        // === ZDE ZAČÍNÁ VYLEPŠENÁ VERZE FUNKCE ===
         async function renderLoans() {
-            const amount = parseFloat(loanState.amtStr) || 0;
+            eLoanAmtStr.value = loanState.amtStr; // Udrží políčko prázdné
+
+            const amount = parseFloat(loanState.amtStr);
+
+            // STOPKA: Pokud není zadána částka, nebo je to nula, nic nepočítáme!
+            if (!loanState.amtStr || isNaN(amount) || amount === 0) {
+                document.getElementById('loanCtrlBaseVal').textContent = `0 Kč`;
+                document.getElementById('loanResZ').textContent = "0";
+                document.getElementById('loanResK').textContent = "0";
+                document.getElementById('loanCtrlZCoef').textContent = "0";
+                document.getElementById('loanCtrlKCoef').textContent = "0";
+                currentLoanResult = null; // Aby nešlo do plánu přidat prázdný výpočet
+                return; // Ukončí funkci, takže se dál nevolá žádný server
+            }
+
             document.getElementById('loanCtrlBaseVal').textContent = `${fC(amount, 0)} Kč`;
             
             // Zobrazíme "načítání", zatímco se data posílají na server
@@ -1529,7 +1543,8 @@
                 document.getElementById('loanResK').textContent = "Chyba";
             }
         }
-        // === ZDE KONČÍ NOVÁ VERZE FUNKCE ===
+        // === ZDE KONČÍ VYLEPŠENÁ VERZE FUNKCE ===
+        
         eLoanInst.addEventListener('change', (e) => { loanState.inst = e.target.value; updateLoanOptions(); renderLoans(); });
         eLoanProd.addEventListener('change', (e) => { loanState.prod = e.target.value; renderLoans(); });
         eLoanAmtStr.addEventListener('input', (e) => { loanState.amtStr = e.target.value; renderLoans(); });
