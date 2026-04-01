@@ -1020,19 +1020,27 @@
             }
 
             if (coef === null && !err) err = "Chybí pravidla.";
-            let res = (targetAmount / base) * (coef || 0);
-            if (p) res *= (duration / 3);
+let res = (targetAmount / base) * (coef || 0);
+// U průběžného poplatku (p = true) už nenásobíme, výsledek je fixní pro 3 roky
 
             document.getElementById('invEntWrapper').style.display = isFeeBased ? 'block' : 'none';
             const eInvAmountWrapper = document.getElementById('invAmountWrapper');
             if (eInvAmountWrapper) eInvAmountWrapper.style.display = isFeeBased ? 'none' : 'block';
 
             const isDurHidden = isFeeBased && !p;
-            document.getElementById('invDurWrapper').style.display = isDurHidden ? 'none' : (showSlider ? 'block' : 'none');
+document.getElementById('invDurWrapper').style.display = isDurHidden ? 'none' : (showSlider ? 'block' : 'none');
 
-            document.getElementById('invAlert20Y').style.display = (!isDurHidden && !is3YearCapped && origDur > 20) ? 'flex' : 'none';
-            document.getElementById('invAlert3Y').style.display = (!isDurHidden && is3YearCapped && origDur > 3) ? 'flex' : 'none';
-            document.getElementById('invAlert3YText').textContent = `Omezení: U ${invState.inst === 'trigea' ? 'Trigea' : 'Partners Invest'} se pravidelné investice napočítávají maximálně na 3 roky dopředu. Výpočet byl zastropován.`;
+const isPrubezna = (invState.fee === 'prubezna');
+document.getElementById('invAlert20Y').style.display = (!isDurHidden && !is3YearCapped && !isPrubezna && origDur > 20) ? 'flex' : 'none';
+
+const show3YAlert = (!isDurHidden && ((isPrubezna && origDur !== 3) || (is3YearCapped && origDur > 3)));
+document.getElementById('invAlert3Y').style.display = show3YAlert ? 'flex' : 'none';
+
+if (isPrubezna) {
+    document.getElementById('invAlert3YText').innerHTML = `Omezení: U investic s <b>průběžným poplatkem</b> se BJ vždy počítají fixně na <b>3 roky</b>.`;
+} else {
+    document.getElementById('invAlert3YText').textContent = `Omezení: U ${invState.inst === 'trigea' ? 'Trigea' : 'Partners Invest'} se pravidelné investice napočítávají maximálně na 3 roky dopředu. Výpočet byl zastropován.`;
+}
             
             if (err) {
                 document.getElementById('invAlertErr').style.display = 'flex';
@@ -1045,7 +1053,7 @@
                 document.getElementById('invResMain').textContent = fC(res);
                 document.getElementById('invResCoef').textContent = fC(coef);
                 document.getElementById('invResBase').textContent = `${fC(base, 0)} Kč`;
-                document.getElementById('invResFormula').textContent = `Model: (${fC(targetAmount, 0)} / ${base}) × ${fC(coef)} ${p ? ` × (${duration} let / 3 roky)` : ''}`;
+                document.getElementById('invResFormula').textContent = `Model: (${fC(targetAmount, 0)} / ${base}) × ${fC(coef)} ${p ? ` × (Fixně 3 roky)` : ''}`;
                 
                 const instName = eInvInst.options[eInvInst.selectedIndex].text;
                 const prodName = eInvProd.options[eInvProd.selectedIndex].text;
