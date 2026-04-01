@@ -112,12 +112,7 @@
                         </select>
                     </div>
 
-                    <div id="invPhaseWrapper" class="bg-emerald-50 border border-emerald-200 p-4 rounded-xl flex items-center justify-between fade-in hidden">
-                        <label class="text-sm font-bold text-emerald-900">Fáze fondu Ambeat Care</label>
-                        <select id="invPhase" class="w-48 bg-white border border-emerald-300 py-2 px-3 rounded-lg focus:ring-2 focus:ring-emerald-500">
-                            <option value="naplneni">Do naplnění 100 mil.</option><option value="standard">Standardní ceník</option>
-                        </select>
-                    </div>
+            
 
                     <label id="invUniqaWrapper" class="flex items-center space-x-3 bg-slate-50 border border-slate-200 p-3 rounded-xl cursor-pointer fade-in hidden">
                         <input type="checkbox" id="invUniqa" class="w-5 h-5 text-emerald-600 rounded">
@@ -879,7 +874,7 @@
             eInvFee.className = `w-full bg-slate-50 border border-slate-300 py-3 px-3 rounded-xl focus:ring-2 focus:ring-emerald-500 ${invState.type === 'single' ? 'opacity-50' : ''}`;
 
             document.getElementById('invFundWrapper').style.display = (invState.inst === 'amundi' && invState.prod === 'online_bezne' && invState.type === 'regular' && invState.fee === 'prubezna') ? 'block' : 'none';
-            document.getElementById('invPhaseWrapper').style.display = (invState.inst === 'ambeat') ? 'flex' : 'none';
+            
             document.getElementById('invUniqaWrapper').style.display = (invState.inst === 'uniqa') ? 'flex' : 'none';
 
             const showSlider = invState.type === 'regular' && !((invState.inst === 'amundi' || invState.inst === 'partners_sec') && (invState.fee === 'expres' || invState.fee === 'standard'));
@@ -890,7 +885,7 @@
             eInvDurStrNum.value = invState.durStr;
             eInvDurStrRange.value = invState.durStr;
             document.getElementById('invFund').value = invState.fund;
-            document.getElementById('invPhase').value = invState.phase;
+            
             document.getElementById('invUniqa').checked = invState.uniqa;
 
             const amount = parseFloat(invState.amountStr) || 0;
@@ -1006,13 +1001,13 @@
                     else { base = 1000; targetAmount = amount; p = true; coef = 3.745; }
                     break;
                 case 'ambeat':
-                    if (invState.type === 'single') {
-                        base = 100000; targetAmount = amount;
-                        if (invState.phase === 'naplneni') coef = 7.143; else coef = amount < 250000 ? 10.402 : amount < 500000 ? 8.711 : 7.003;
-                    } else {
-                        base = 1000; targetAmount = amount; p = true; coef = invState.phase === 'naplneni' ? 2.521 : 3.745;
-                    }
-                    break;
+    if (invState.type === 'single') {
+        base = 100000; targetAmount = amount;
+        coef = amount < 250000 ? 10.402 : amount < 500000 ? 8.711 : 7.003;
+    } else {
+        base = 1000; targetAmount = amount; p = true; coef = 3.745;
+    }
+    break;
                 case 'partners_sec': base = 10000; targetAmount = entranceFee; isFeeBased = true; coef = 35.714; if (invState.fee === 'prubezna') p = true; break;
                 case 'avant': if (invState.type !== 'single') err = "Avant FKI jen jednorázově."; base = 10000; targetAmount = entranceFee; isFeeBased = true; coef = 35.714; break;
                 case 'ibis': if (invState.type !== 'single') err = "IBIS jen jednorázově."; base = 10000; targetAmount = entranceFee; isFeeBased = true; coef = 28.571; break;
@@ -1094,7 +1089,7 @@ if (isPrubezna) {
         });
         eInvFee.addEventListener('change', (e) => { invState.fee = e.target.value; renderInvest(); });
         document.getElementById('invFund').addEventListener('change', (e) => { invState.fund = e.target.value; renderInvest(); });
-        document.getElementById('invPhase').addEventListener('change', (e) => { invState.phase = e.target.value; renderInvest(); });
+       
         document.getElementById('invUniqa').addEventListener('change', (e) => { 
             invState.uniqa = e.target.checked; 
             if(invState.uniqa) invState.amountStr = '';
