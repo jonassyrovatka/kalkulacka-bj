@@ -1127,6 +1127,10 @@
         const ePenzAllianzTfCut = document.getElementById('penzAllianzTfCut');
 
         function updatePenzOptions() {
+
+            ePenzInst.value = penzState.inst; // Srovná roletku na Conseq
+        
+            
             populateSelect(ePenzType, penzeProdsMap[penzState.inst]);
             const validTypes = penzeProdsMap[penzState.inst].map(o => o.id);
             if (!validTypes.includes(penzState.type) && validTypes.length > 0) penzState.type = validTypes[0];
