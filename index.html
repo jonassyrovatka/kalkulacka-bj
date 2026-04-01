@@ -674,19 +674,8 @@
         let invState = { inst: 'amundi', prod: 'online_bezne', type: 'single', fee: 'expres', fund: 'akcie', phase: 'standard', uniqa: false, amountStr: '100000', durStr: '10', entStr: '10000' };
         let insState = { inst: 'allianz', prod: 'zivot', type: 'pwl', risk: 'velka', rpStr: '1000', rpiStr: '500', durStr: '30' };
         let loanState= { inst: '', prod: '', amtStr: '' };
-        let penzState = { 
-    inst: 'conseq', 
-    type: 'dps_new', 
-    age: '',          // Věk bude prázdný
-    amountPart: '',   // Částka účastníka bude prázdná
-    amountEmp: '0',   // Zaměstnavatele můžeme nechat na 0
-    amountOneTime: '', // Jednorázový vklad prázdný
-    conseqGarance: false, 
-    genFund: 'ostatni', 
-    nnFromTf: false, 
-    renteaOnline: false, 
-    allianzTfCut: false 
-};
+        let penzState = { inst: 'conseq', type: 'dps_new', age: '30', amountPart: '1000', amountEmp: '0', amountOneTime: '100000', conseqGarance: false, genFund: 'ostatni', nnFromTf: false, renteaOnline: false, allianzTfCut: false };
+
         // Proměnné pro plán
         let clientPlan = [];
         let currentInvestResult = null;
@@ -1127,10 +1116,6 @@
         const ePenzAllianzTfCut = document.getElementById('penzAllianzTfCut');
 
         function updatePenzOptions() {
-
-            ePenzInst.value = penzState.inst; // Srovná roletku na Conseq
-        
-            
             populateSelect(ePenzType, penzeProdsMap[penzState.inst]);
             const validTypes = penzeProdsMap[penzState.inst].map(o => o.id);
             if (!validTypes.includes(penzState.type) && validTypes.length > 0) penzState.type = validTypes[0];
@@ -1162,29 +1147,15 @@
         }
 
         function renderPenz() {
-            // Synchronizace políček s pamětí (aby zůstala prázdná)
-            ePenzAge.value = penzState.age;
-            ePenzAmountPart.value = penzState.amountPart;
-            ePenzAmountEmp.value = penzState.amountEmp;
-            ePenzAmountOneTime.value = penzState.amountOneTime;
-
-            const age = parseInt(penzState.age);
+            const age = parseInt(penzState.age) || 0;
             const part = parseFloat(penzState.amountPart) || 0;
             const emp = parseFloat(penzState.amountEmp) || 0;
             const one = parseFloat(penzState.amountOneTime) || 0;
 
-            // STOPKA: Pokud není vyplněn věk NEBO částka (podle typu operace)
-            const isOnetime = penzState.type === 'onetime';
-            const hasAmount = isOnetime ? (one > 0) : (part > 0 || emp > 0);
-
-            if (isNaN(age) || !hasAmount) {
-                document.getElementById('penzResZ').textContent = "0";
-                document.getElementById('penzResK').textContent = "0";
-                document.getElementById('penzResultBlock').style.display = 'none'; // Schováme výsledky
-                document.getElementById('penzAlertMax').style.display = 'none';
-                currentPenzResult = null;
-                return; // Tady funkce skončí a dál nic nepočítá
-            }
+            let bj = 0;
+            let kbj = 0;
+            let err = null;
+            let isCapped = false;
             
             // Strop je legislativní. 7 % z průměrné mzdy. Pro rok 2025 je to cca 14,524 BJ.
             const PENZE_MAX_BJ = 14.524; 
