@@ -1403,32 +1403,6 @@
 
         function renderInsurance() {
             
-            // 1. SYNCHRONIZACE: Toto zajistí, že se 20 let propíše do políček nad posuvníkem
-    eInsRpStr.value = insState.rpStr;
-    eInsRpiStr.value = insState.rpiStr;
-    
-    // Tyto dva řádky ovlivňují to číslo nad posuvníkem a posuvník samotný
-    eInsDurStrNum1.value = insState.durStr;
-    eInsDurStrRange1.value = insState.durStr;
-    // Pokud máte v kódu i druhý posuvník (pro jiné typy pojištění):
-    if(eInsDurStrNum2) eInsDurStrNum2.value = insState.durStr;
-    if(eInsDurStrRange2) eInsDurStrRange2.value = insState.durStr;
-
-    const rp = parseFloat(insState.rpStr) || 0;
-    const rpi = parseFloat(insState.rpiStr) || 0;
-    const dur = parseFloat(insState.durStr) || 0;
-
-    // 2. STOPKA: Pokud není zadáno pojistné, vymažeme výsledky, ALE ROČNÍ EKVIVALENT necháme prázdný
-    if (!insState.rpStr || rp === 0) {
-        document.getElementById('insRpEq').textContent = ""; 
-        document.getElementById('insRpiEq').textContent = "";
-        document.getElementById('insResZ').textContent = "0";
-        document.getElementById('insResK').textContent = "0";
-        document.getElementById('insResultBlock').style.display = 'none'; 
-        currentInsResult = null;
-        return; // Tady funkce skončí, takže výpočet BJ neproběhne
-    }
-            
             const rp = parseFloat(insState.rpStr) || 0;
             const rpi = parseFloat(insState.rpiStr) || 0;
             const dur = parseFloat(insState.durStr) || 0;
