@@ -1491,22 +1491,45 @@
             eLoanProd.value = loanState.prod;
         }
 
-        function renderLoans() {
+        // === ZDE ZAČÍNÁ NOVÁ VERZE FUNKCE ===
+        async function renderLoans() {
             const amount = parseFloat(loanState.amtStr) || 0;
-            const bnk = loanDataMap.find(b => b.id === loanState.inst) || loanDataMap[0];
-            const prd = bnk.prods.find(p => p.id === loanState.prod) || bnk.prods[0];
-            let zC = prd.z; let kC = prd.k || prd.z; let bs = prd.base || 100000;
-            let zRes = (amount / bs) * zC; let kRes = (amount / bs) * kC;
-
-            document.getElementById('loanResZ').textContent = fC(zRes);
-            document.getElementById('loanResK').textContent = fC(kRes);
             document.getElementById('loanCtrlBaseVal').textContent = `${fC(amount, 0)} Kč`;
-            document.getElementById('loanCtrlZCoef').textContent = fC(zC);
-            document.getElementById('loanCtrlKCoef').textContent = fC(kC);
+            
+            // Zobrazíme "načítání", zatímco se data posílají na server
+            document.getElementById('loanResZ').textContent = "...";
+            document.getElementById('loanResK').textContent = "...";
+            document.getElementById('loanCtrlZCoef').textContent = "...";
+            document.getElementById('loanCtrlKCoef').textContent = "...";
 
-            currentLoanResult = { type: 'loans', title: `Úvěr: ${bnk.name}`, subtitle: `${prd.name}`, bj: zRes, kbj: kRes };
+            try {
+                // Zavoláme náš sejf a pošleme mu aktuální nastavení úvěru
+                const response = await fetch('/.netlify/functions/vypocet', {
+                    method: 'POST',
+                    body: JSON.stringify({ type: 'loans', state: loanState })
+                });
+
+                // Přijmeme čistá hotová čísla ze serveru
+                const data = await response.json();
+
+                // Vypíšeme je do HTML
+                document.getElementById('loanResZ').textContent = fC(data.zRes);
+                document.getElementById('loanResK').textContent = fC(data.kRes);
+                document.getElementById('loanCtrlZCoef').textContent = fC(data.zC);
+                document.getElementById('loanCtrlKCoef').textContent = fC(data.kC);
+
+                // Příprava pro uložení do plánu
+                const bnk = loanDataMap.find(b => b.id === loanState.inst) || loanDataMap[0];
+                const prd = bnk.prods.find(p => p.id === loanState.prod) || bnk.prods[0];
+                currentLoanResult = { type: 'loans', title: `Úvěr: ${bnk.name}`, subtitle: `${prd.name}`, bj: data.zRes, kbj: data.kRes };
+
+            } catch (error) {
+                console.error("Chyba při komunikaci se serverem:", error);
+                document.getElementById('loanResZ').textContent = "Chyba";
+                document.getElementById('loanResK').textContent = "Chyba";
+            }
         }
-
+        // === ZDE KONČÍ NOVÁ VERZE FUNKCE ===
         eLoanInst.addEventListener('change', (e) => { loanState.inst = e.target.value; updateLoanOptions(); renderLoans(); });
         eLoanProd.addEventListener('change', (e) => { loanState.prod = e.target.value; renderLoans(); });
         eLoanAmtStr.addEventListener('input', (e) => { loanState.amtStr = e.target.value; renderLoans(); });
