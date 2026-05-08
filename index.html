@@ -1511,6 +1511,11 @@
         <h2 id="auth-title" style="font-size:1.5rem; font-weight:bold; margin-bottom:1.5rem; text-align:center;">Přihlášení</h2>
         
         <form id="login-form" style="display:flex; flex-direction:column; gap:1rem;">
+            
+            <p id="register-hint" style="color:#64748b; font-size:0.875rem; text-align:center; display:none; margin-top:-0.5rem; margin-bottom:0;">
+                Prosím, k registraci použijte svůj <b>Partners e-mail</b>.
+            </p>
+
             <input type="email" id="login-email" placeholder="Email" required style="padding:0.75rem; border:1px solid #cbd5e1; border-radius:0.75rem;">
             <input type="password" id="login-password" placeholder="Heslo" required style="padding:0.75rem; border:1px solid #cbd5e1; border-radius:0.75rem;">
             
@@ -1543,7 +1548,6 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    // Přidán import createUserWithEmailAndPassword
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
     const firebaseConfig = {
@@ -1565,6 +1569,7 @@
     const authTitle = document.getElementById('auth-title');
     const authSubmitBtn = document.getElementById('auth-submit-btn');
     const toggleAuthModeBtn = document.getElementById('toggle-auth-mode');
+    const registerHint = document.getElementById('register-hint');
     
     let isLoginMode = true; // Výchozí stav je přihlašování
 
@@ -1586,10 +1591,12 @@
             authTitle.innerText = "Přihlášení";
             authSubmitBtn.innerText = "Vstoupit";
             toggleAuthModeBtn.innerText = "Nemáte účet? Zaregistrujte se.";
+            registerHint.style.display = 'none';
         } else {
             authTitle.innerText = "Registrace";
             authSubmitBtn.innerText = "Vytvořit účet";
             toggleAuthModeBtn.innerText = "Již máte účet? Přihlaste se.";
+            registerHint.style.display = 'block';
         }
     });
 
@@ -1606,17 +1613,27 @@
                 // PŘIHLÁŠENÍ
                 await signInWithEmailAndPassword(auth, email, password);
             } else {
-                // REGISTRACE
+                // REGISTRACE - Volitelná kontrola koncovky @partners.cz
+                // Pokud bys chtěl lidem striktně ZAKÁZAT použití jiného e-mailu, 
+                // můžeš odkomentovat následující 4 řádky:
+                /*
+                if (!email.toLowerCase().endsWith('@partners.cz')) {
+                    throw { code: 'custom/not-partners-email' };
+                }
+                */
+                
                 await createUserWithEmailAndPassword(auth, email, password);
             }
         } catch (error) {
             errStatus.style.display = 'block';
             
-            // Zachycení nejčastějších chyb od Firebase a jejich překlad do češtiny
-            if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+            // Zachycení chyb
+            if (error.code === 'custom/not-partners-email') {
+                errStatus.innerText = "Chyba: K registraci lze použít pouze e-mail @partners.cz.";
+            } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
                 errStatus.innerText = "Chyba: Špatné heslo nebo uživatel neexistuje.";
             } else if (error.code === 'auth/email-already-in-use') {
-                errStatus.innerText = "Chyba: Tento email je již zaregistrovaný.";
+                errStatus.innerText = "Chyba: Tento e-mail je již zaregistrovaný.";
             } else if (error.code === 'auth/weak-password') {
                 errStatus.innerText = "Chyba: Heslo musí mít alespoň 6 znaků.";
             } else {
