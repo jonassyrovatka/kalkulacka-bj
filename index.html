@@ -28,11 +28,11 @@
 
     <div class="max-w-3xl w-full relative">
     
-        <div class="bg-white p-2 rounded-2xl shadow-sm mb-6 flex flex-col md:flex-row justify-between items-center border border-slate-200 gap-2 md:gap-0">
+        <div class="bg-white p-2 sm:p-3 rounded-2xl shadow-sm mb-6 flex flex-col lg:flex-row justify-between items-center border border-slate-200 gap-3 lg:gap-0">
             
-            <div class="flex flex-wrap justify-center md:justify-start items-center gap-1.5 sm:gap-2">
+            <div class="flex flex-wrap justify-center items-center gap-1.5 sm:gap-2">
                 <button id="tab-invest" onclick="setAppMode('invest')" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md text-sm sm:text-base">
-                    <i data-lucide="trending-up" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> <span class="hidden sm:inline">Investice</span><span class="sm:hidden">Inv.</span>
+                    <i data-lucide="trending-up" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> Investice
                 </button>
                 <button id="tab-penze" onclick="setAppMode('penze')" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 text-sm sm:text-base">
                     <i data-lucide="piggy-bank" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> Penze
@@ -44,17 +44,17 @@
                     <i data-lucide="home" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> Úvěry
                 </button>
                 <button id="tab-plan" onclick="setAppMode('plan')" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 relative text-sm sm:text-base">
-                    <i data-lucide="briefcase" class="mr-1.5 hidden sm:block w-[18px] h-[18px]"></i> Plán
+                    <i data-lucide="briefcase" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> Plán
                     <span id="planBadge" class="ml-1 sm:ml-1.5 bg-slate-200 text-slate-600 text-xs px-2 py-0.5 rounded-full font-bold">0</span>
                 </button>
             </div>
             
-            <div class="flex flex-wrap justify-center items-center gap-1.5 sm:gap-2 w-full md:w-auto pt-2 md:pt-0 mt-1 md:mt-0 border-t md:border-none border-slate-100">
-                <button onclick="showDonation()" class="px-3 py-2.5 rounded-xl font-bold flex items-center transition-all bg-amber-50 text-amber-700 hover:bg-amber-500 hover:text-white border border-amber-200 text-xs uppercase tracking-tight">
-                    <span class="text-sm mr-1.5">☕</span> Podpořit
+            <div class="flex flex-wrap justify-center items-center gap-2 w-full lg:w-auto pt-2 lg:pt-0 border-t lg:border-none border-slate-100">
+                <button onclick="showDonation()" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-amber-50 text-amber-700 hover:bg-amber-500 hover:text-white border border-amber-200 text-xs sm:text-sm uppercase tracking-tight">
+                    <span class="text-base sm:text-lg mr-1.5">☕</span> Podpořit
                 </button>
-                <button id="tab-logout" onclick="logoutApp()" class="px-3 py-2.5 rounded-xl font-bold flex items-center transition-all bg-red-50 text-red-600 hover:bg-red-500 hover:text-white border border-red-100 text-xs uppercase tracking-tight">
-                    <i data-lucide="log-out" class="w-[14px] h-[14px] mr-1.5"></i> Odhlásit
+                <button id="tab-logout" onclick="logoutApp()" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-red-50 text-red-600 hover:bg-red-500 hover:text-white border border-red-100 text-xs sm:text-sm uppercase tracking-tight">
+                    <i data-lucide="log-out" class="w-[14px] h-[14px] sm:w-[16px] sm:h-[16px] mr-1.5"></i> Odhlásit
                 </button>
             </div>
 
