@@ -322,15 +322,16 @@
                                 <i data-lucide="building" class="mr-2 w-4 h-4 text-blue-600"></i> Pojišťovna
                             </label>
                             <select id="insInst" class="w-full bg-slate-50 border border-slate-300 py-3 px-3 rounded-xl focus:ring-2 focus:ring-blue-500 font-medium">
-                                <option value="allianz">Allianz</option>
-                                <option value="cpp">ČPP</option>
-                                <option value="generali">Generali Česká pojišťovna</option>
-                                <option value="koop">Kooperativa</option>
-                                <option value="metlife">MetLife</option>
-                                <option value="nn">NN Životní pojišťovna</option>
-                                <option value="simplea">Simplea</option>
-                                <option value="uniqa">Uniqa</option>
-                            </select>
+    <option value="allianz">Allianz</option>
+    <option value="cpp">ČPP</option>
+    <option value="generali">Generali Česká pojišťovna</option>
+    <option value="koop">Kooperativa</option>
+    <option value="metlife">MetLife</option>
+    <option value="nn">NN Životní pojišťovna</option>
+    <option value="pillow">Pillow</option>
+    <option value="simplea">Simplea</option>
+    <option value="uniqa">Uniqa</option>
+</select>
                         </div>
                         <div class="space-y-2">
                             <label class="flex items-center text-sm font-semibold text-slate-700">
@@ -630,15 +631,16 @@
 
         // Data Pojištění (ŽIVOT)
         const insProductsMap = {
-            allianz: [{ id: 'zivot', name: 'Partners Život' }],
-            cpp: [{ id: 'max_life', name: 'Maximum Life' }, { id: 'max_invest', name: 'Maximum Invest' }],
-            generali: [{ id: 'allegro', name: 'Allegro 20' }],
-            koop: [{ id: 'flexi_1fn', name: 'Flexi 1FN (Bez investice)' }, { id: 'flexi_1fg', name: 'Flexi 1FG (S investicí)' }, { id: 'prani_4ln', name: 'Na přání 4LN (Bez investice)' }, { id: 'prani_1lg', name: 'Na přání 1LG (S investicí)' }, { id: 'sobestacnost', name: 'Pojištění soběstačnosti FLEXI' }],
-            metlife: [{ id: 'garde', name: 'Garde Risk 6.0' }, { id: 'vision', name: 'Vision 8' }],
-            nn: [{ id: 'orange', name: 'Orange Care (Dlouhodobá péče)' }],
-            simplea: [{ id: 'simplea2', name: 'Simplea 2.0' }, { id: 'pece', name: 'Pojištění dlouhodobé péče' }],
-            uniqa: [{ id: 'zivot_radost', name: 'Život a radost (Pouze riziko)' }, { id: 'stastny_zivot', name: 'Šťastný život (S investicí)' }]
-        };
+    allianz: [{ id: 'zivot', name: 'Partners Život' }],
+    cpp: [{ id: 'max_life', name: 'Maximum Life' }, { id: 'max_invest', name: 'Maximum Invest' }],
+    generali: [{ id: 'allegro', name: 'Allegro 20' }],
+    koop: [{ id: 'flexi_1fn', name: 'Flexi 1FN (Bez investice)' }, { id: 'flexi_1fg', name: 'Flexi 1FG (S investicí)' }, { id: 'prani_4ln', name: 'Na přání 4LN (Bez investice)' }, { id: 'prani_1lg', name: 'Na přání 1LG (S investicí)' }, { id: 'sobestacnost', name: 'Pojištění soběstačnosti FLEXI' }],
+    metlife: [{ id: 'garde', name: 'Garde Risk 6.0' }, { id: 'vision', name: 'Vision 8' }],
+    nn: [{ id: 'orange', name: 'Orange Care (Dlouhodobá péče)' }],
+    pillow: [{ id: 'uraz_nemoc', name: 'Pojištění úrazu a nemoci' }],
+    simplea: [{ id: 'simplea2', name: 'Simplea 2.0' }, { id: 'pece', name: 'Pojištění dlouhodobé péče' }],
+    uniqa: [{ id: 'zivot_radost', name: 'Život a radost (Pouze riziko)' }, { id: 'stastny_zivot', name: 'Šťastný život (S investicí)' }]
+};
 
         // --- DATA PRO NEŽIVOT S OBFUSKOVANÝMI KOEFICIENTY ---
         const nezDataMap = [
@@ -1453,9 +1455,11 @@
             let opts = [];
             if (['max_invest', 'vision'].includes(insState.prod)) {
                 opts.push({ v: 'semi', l: 'Semi PAYG' });
-            } else if (['prani_4ln', 'prani_1lg', 'sobestacnost', 'orange', 'pece'].includes(insState.prod)) {
-                opts.push({ v: 'pwl', l: 'PWL / Průběžný režim' });
-            } else {
+            
+} else if (['prani_4ln', 'prani_1lg', 'sobestacnost', 'orange', 'pece', 'uraz_nemoc'].includes(insState.prod)) {
+    opts.push({ v: 'pwl', l: 'PWL / Průběžný režim' });
+} else {
+
                 if (insState.inst === 'koop' && ['flexi_1fn', 'flexi_1fg'].includes(insState.prod)) opts.push({ v: 'upfront_pwl', l: 'UpFront PWL (Nováček)' });
                 if (insState.inst === 'simplea' && insState.prod === 'simplea2') opts.push({ v: 'upfront_pwl', l: 'UpFront PWL (Nováček)' });
                 opts.push({ v: 'pwl', l: 'PWL (Průběžný režim)' });
@@ -1491,9 +1495,11 @@
                 } else { zR = 10.714; if (insState.prod === 'prani_1lg') zI = 1.571; }
             } else if (insState.inst === 'metlife') {
                 zR = insState.type === 'pwl' ? 25.0 : getArrVal(mSemi, dur);
-            } else if (insState.inst === 'nn') {
-                if (dur >= 2) zR = 14.286; else err = "Doba min 2 roky.";
-            } else if (insState.inst === 'simplea') {
+           } else if (insState.inst === 'nn') {
+    if (dur >= 2) zR = 14.286; else err = "Doba min 2 roky.";
+} else if (insState.inst === 'pillow') {
+    zR = 25.0;
+} else if (insState.inst === 'simplea') {
                 if (insState.prod === 'pece') { if (dur >= 2) zR = 14.286; else err = "Doba min 2 roky."; }
                 else { zR = insState.type === 'upfront_pwl' ? (dur >= 10 ? 62.500 : (err = "Doba min 10 let", 0)) : (dur === 1 ? 12.500 : 25.000); }
             } else if (insState.inst === 'uniqa') {
@@ -1502,7 +1508,7 @@
             }
 
             kI = zI;
-            if (['orange', 'pece', 'sobestacnost', 'prani_4ln', 'prani_1lg'].includes(insState.prod)) { kR = zR; }
+            if (['orange', 'pece', 'sobestacnost', 'prani_4ln', 'prani_1lg', 'uraz_nemoc'].includes(insState.prod)) { kR = zR; }
             else if (insState.inst === 'allianz') { kR = insState.type === 'pwl' ? 53.571 : getArrVal(aKar, dur); }
             else if (insState.inst === 'generali') { kR = ((insState.risk === 'mala' ? 10.714 : 25.0) / 70) * 150; }
             else if (insState.inst === 'koop' && ['flexi_1fn', 'flexi_1fg'].includes(insState.prod)) { kR = (insState.type === 'pwl' || insState.type === 'upfront_pwl') ? 53.571 : getArrVal(sKar, dur); }
