@@ -1467,11 +1467,9 @@
             let opts = [];
             if (['max_invest', 'vision'].includes(insState.prod)) {
                 opts.push({ v: 'semi', l: 'Semi PAYG' });
-            
-} else if (['prani_4ln', 'prani_1lg', 'sobestacnost', 'orange', 'pece', 'uraz_nemoc'].includes(insState.prod)) {
-    opts.push({ v: 'pwl', l: 'PWL / Průběžný režim' });
-} else {
-
+            } else if (['prani_4ln', 'prani_1lg', 'sobestacnost', 'orange', 'pece', 'uraz_nemoc'].includes(insState.prod)) {
+                opts.push({ v: 'pwl', l: 'PWL / Průběžný režim' });
+            } else {
                 if (insState.inst === 'koop' && ['flexi_1fn', 'flexi_1fg'].includes(insState.prod)) opts.push({ v: 'upfront_pwl', l: 'UpFront PWL (Nováček)' });
                 if (insState.inst === 'simplea' && insState.prod === 'simplea2') opts.push({ v: 'upfront_pwl', l: 'UpFront PWL (Nováček)' });
                 opts.push({ v: 'pwl', l: 'PWL (Průběžný režim)' });
@@ -1482,6 +1480,14 @@
             const validTypes = opts.map(o => o.v);
             if (!validTypes.includes(insState.type) && validTypes.length > 0) insState.type = validTypes[0];
             eInsType.value = insState.type;
+
+            // --- PŘIDAT TENTO BLOK PRO SKRYTÍ RIZIK U PILLOW ---
+            if (insState.inst === 'pillow') {
+                eInsRisk.parentElement.style.display = 'none';
+            } else {
+                eInsRisk.parentElement.style.display = 'block';
+            }
+            // ---------------------------------------------------
         }
 
         function renderInsurance() {
