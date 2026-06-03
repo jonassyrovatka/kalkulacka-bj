@@ -573,18 +573,23 @@
                         </div>
 
                     <div id="planSummary" class="hidden mt-6 pt-5 border-t-2 border-slate-200">
-                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4">Celkové shrnutí klienta</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl flex items-center justify-between">
-                                <span class="font-bold text-indigo-900">Celkem Získatelské</span>
-                                <div class="flex items-baseline gap-1"><span id="planTotalBJ" class="text-3xl font-extrabold text-indigo-700">0</span><span class="text-indigo-600 font-bold text-sm">BJ</span></div>
-                            </div>
-                            <div class="bg-fuchsia-50 border border-fuchsia-100 p-4 rounded-xl flex items-center justify-between">
-                                <span class="font-bold text-fuchsia-900">Celkem Kariérové</span>
-                                <div class="flex items-baseline gap-1"><span id="planTotalKBJ" class="text-3xl font-extrabold text-fuchsia-700">0</span><span class="text-fuchsia-600 font-bold text-sm">KBJ</span></div>
-                            </div>
-                        </div>
-                    </div>
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-widest">Celkové shrnutí klienta</h3>
+        <button onclick="clearPlan()" class="text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-100 px-3 py-1.5 rounded-lg text-sm font-bold flex items-center transition-colors shadow-sm">
+            <i data-lucide="trash-2" class="w-4 h-4 mr-1.5"></i> Smazat plán
+        </button>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="bg-indigo-50 border border-indigo-100 p-4 rounded-xl flex items-center justify-between">
+            <span class="font-bold text-indigo-900">Celkem Získatelské</span>
+            <div class="flex items-baseline gap-1"><span id="planTotalBJ" class="text-3xl font-extrabold text-indigo-700">0</span><span class="text-indigo-600 font-bold text-sm">BJ</span></div>
+        </div>
+        <div class="bg-fuchsia-50 border border-fuchsia-100 p-4 rounded-xl flex items-center justify-between">
+            <span class="font-bold text-fuchsia-900">Celkem Kariérové</span>
+            <div class="flex items-baseline gap-1"><span id="planTotalKBJ" class="text-3xl font-extrabold text-fuchsia-700">0</span><span class="text-fuchsia-600 font-bold text-sm">KBJ</span></div>
+        </div>
+    </div>
+</div>
                 </div>
             </div>
 
@@ -848,6 +853,13 @@
             clientPlan.splice(index, 1);
             renderPlan();
         }
+
+        function clearPlan() {
+    if (confirm("Opravdu chcete smazat celý plán klienta?")) {
+        clientPlan = [];
+        renderPlan();
+    }
+}
 
         function renderPlan() {
             const listWrapper = document.getElementById('planListWrapper');
