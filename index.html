@@ -40,6 +40,9 @@
                 <button id="tab-insurance" onclick="setAppMode('insurance')" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 text-sm sm:text-base">
                     <i data-lucide="shield" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> Život
                 </button>
+                <button id="tab-nezivot" onclick="setAppMode('nezivot')" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 text-sm sm:text-base">
+                    <i data-lucide="umbrella" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> Neživot
+                </button>
                 <button id="tab-loans" onclick="setAppMode('loans')" class="px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all text-slate-500 hover:bg-slate-50 text-sm sm:text-base">
                     <i data-lucide="home" class="mr-1.5 w-[16px] h-[16px] sm:w-[18px] sm:h-[18px]"></i> Úvěry
                 </button>
@@ -439,6 +442,64 @@
                 </div>
             </div>
 
+            <div id="section-nezivot" class="hidden">
+                <div class="p-6 space-y-6 fade-in">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="space-y-2">
+                            <label class="flex items-center text-sm font-semibold text-slate-700">
+                                <i data-lucide="building" class="mr-2 w-4 h-4 text-sky-600"></i> Pojišťovna
+                            </label>
+                            <select id="nezInst" class="w-full bg-slate-50 border border-slate-300 py-3 px-3 rounded-xl focus:ring-2 focus:ring-sky-500 font-medium"></select>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="flex items-center text-sm font-semibold text-slate-700">
+                                <i data-lucide="umbrella" class="mr-2 w-4 h-4 text-sky-600"></i> Typ produktu
+                            </label>
+                            <select id="nezProd" class="w-full bg-slate-50 border border-slate-300 py-3 px-3 rounded-xl focus:ring-2 focus:ring-sky-500 font-medium"></select>
+                        </div>
+                    </div>
+                    <hr class="border-slate-200" />
+                    <div class="space-y-2">
+                        <label class="flex items-center text-sm font-bold text-slate-800">
+                            <i data-lucide="coins" class="mr-2 w-4 h-4 text-sky-600"></i> <span id="nezRpLabel">Roční pojistné (Kč)</span>
+                        </label>
+                        <input type="number" id="nezRpStr" class="w-full sm:w-1/2 bg-white border border-slate-300 py-3 px-4 rounded-xl focus:ring-2 focus:ring-sky-500 font-bold text-lg shadow-sm" />
+                        <p class="text-xs text-slate-500 mt-1 font-medium">Výpočet BJ se aplikuje standardně na každých <span id="nezBaseSpan">10 000</span> <span id="nezBaseText">Kč ročního pojistného</span>.</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border-t border-slate-200 p-6 fade-in">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-sky-100 shadow-md relative overflow-hidden">
+                            <div class="absolute -left-6 -top-6 opacity-5"><i data-lucide="umbrella" class="text-sky-900 w-[100px] h-[100px]" stroke-width="1.5"></i></div>
+                            <span class="text-slate-500 font-bold text-xs uppercase mb-2 z-10 text-center">Získatelské jednotky</span>
+                            <div class="flex items-baseline gap-2 z-10"><span id="nezResZ" class="text-4xl sm:text-5xl font-extrabold text-slate-900">0</span><span class="font-bold text-lg text-sky-600">BJ</span></div>
+                        </div>
+                        <div class="flex flex-col items-center justify-center p-6 bg-white rounded-2xl border border-cyan-100 shadow-md relative overflow-hidden">
+                            <div class="absolute -right-6 -bottom-6 opacity-5"><i data-lucide="user-check" class="text-cyan-900 w-[100px] h-[100px]" stroke-width="1.5"></i></div>
+                            <span class="text-slate-500 font-bold text-xs uppercase mb-2 z-10 text-center">Kariérové jednotky</span>
+                            <div class="flex items-baseline gap-2 z-10"><span id="nezResK" class="text-4xl sm:text-5xl font-extrabold text-slate-900">0</span><span class="font-bold text-lg text-cyan-600">KBJ</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-center mt-4">
+                        <button onclick="addCurrentToPlan('nezivot')" class="px-6 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-bold flex items-center transition-colors shadow-sm">
+                            <i data-lucide="plus-circle" class="mr-2 w-5 h-5"></i> Přidat do plánu
+                        </button>
+                    </div>
+
+                    <div class="mt-5 w-full bg-white rounded-xl p-4 border border-slate-200 shadow-sm text-sm">
+                        <div class="flex items-center text-slate-700 font-bold mb-3 border-b border-slate-100 pb-2">
+                            <i data-lucide="info" class="mr-2 w-4 h-4 text-sky-500"></i> Kontrola výpočtů
+                        </div>
+                        <div class="grid grid-cols-1 gap-3">
+                            <div class="flex justify-between items-center mb-1"><span class="text-slate-600 font-medium" id="nezCtrlBaseLabel">Základ (Ročně):</span><span id="nezCtrlBaseVal" class="font-bold text-slate-900">0</span></div>
+                            <div class="bg-sky-50 p-2 rounded-lg mt-1 flex justify-between items-center border border-sky-100/50"><span class="text-sky-800 font-medium">Koeficient (Získatelské BJ):</span><span id="nezCtrlZCoef" class="font-bold text-sky-900">0</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="section-loans" class="hidden">
                 <div class="p-6 space-y-6 fade-in">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -458,8 +519,8 @@
                     <hr class="border-slate-200" />
                     <div class="space-y-2">
                         <label class="flex items-center text-sm font-bold text-slate-800">
-    <i data-lucide="coins" class="mr-2 w-4 h-4 text-amber-600"></i> <span>Výše úvěru (Kč)</span>
-</label>
+                            <i data-lucide="coins" class="mr-2 w-4 h-4 text-amber-600"></i> <span>Výše úvěru (Kč)</span>
+                        </label>
                         <input type="number" id="loanAmtStr" class="w-full sm:w-1/2 bg-white border border-slate-300 py-3 px-4 rounded-xl focus:ring-2 focus:ring-amber-500 font-bold text-lg shadow-sm" />
                         <p class="text-xs text-slate-500 mt-1 font-medium">Výpočet BJ se aplikuje na každých <span id="loanBaseSpan">100 000</span> Kč <span id="loanBaseText">výše úvěru</span>.</p>
                     </div>
@@ -567,7 +628,7 @@
             default: [{ v: 'default', l: 'Základní fondy' }]
         };
 
-        // Data Pojištění
+        // Data Pojištění (ŽIVOT)
         const insProductsMap = {
             allianz: [{ id: 'zivot', name: 'Partners Život' }],
             cpp: [{ id: 'max_life', name: 'Maximum Life' }, { id: 'max_invest', name: 'Maximum Invest' }],
@@ -578,6 +639,26 @@
             simplea: [{ id: 'simplea2', name: 'Simplea 2.0' }, { id: 'pece', name: 'Pojištění dlouhodobé péče' }],
             uniqa: [{ id: 'zivot_radost', name: 'Život a radost (Pouze riziko)' }, { id: 'stastny_zivot', name: 'Šťastný život (S investicí)' }]
         };
+
+        // --- NOVÝ KÓD PRO NEŽIVOT (DATA) ---
+        const nezDataMap = [
+            { id: 'axa', name: 'AXA Assistance', prods: [{ id: 'cest', name: 'Cestovní (dlouh., krát., tuzem.)', z: 7.143 }, { id: 'cest_corp', name: 'Travel 4 Business', z: 8.929 }, { id: 'zdrav_ciz', name: 'Zdravotní pojištění cizinců', z: 14.286 }] },
+            { id: 'allianz', name: 'Allianz', prods: [{ id: 'zivot', name: 'Partners ŽIVOT', z: 25.000 }, { id: 'f1', name: 'Allianz F1 (Vklad mimoř. poj.)', z: 1.429 }, { id: 'cest_krat', name: 'Cestovní pojištění (krátkodobé)', z: 4.643 }, { id: 'cest_dlou', name: 'Cestovní pojištění (dlouhodobé)', z: 7.857 }, { id: 'auto', name: 'Pojištění vozidel (Moje/iAuto/Autopoj)', z: 6.429 }, { id: 'majetek', name: 'Pojištění majetku (Domov, Odp.)', z: 17.857 }, { id: 'golf', name: 'PRO golf', z: 6.071 }, { id: 'podnik', name: 'Podnikatelé (profesní, rek. plavidla...)', z: 5.357 }] },
+            { id: 'csob', name: 'ČSOB pojišťovna', prods: [{ id: 'domov', name: 'Náš DOMOV', z: 17.857 }, { id: 'odp', name: 'Naše odpovědnost', z: 3.571 }, { id: 'net', name: 'Internetová rizika', z: 7.143 }, { id: 'best', name: 'Best Doctors a RENTO', z: 14.286 }, { id: 'uraz', name: 'Hromadné úrazové', z: 5.357 }, { id: 'auto', name: 'Naše auto', z: 6.429 }, { id: 'flotila', name: 'Odpovědnost z provozu (flotily)', z: 5.357 }, { id: 'podnik', name: 'TRUMF a Podnikatelská rizika', z: 6.429 }, { id: 'pravni', name: 'Právní ochrana', z: 7.143 }, { id: 'atlas', name: 'Cestovní Atlas', z: 4.286 }] },
+            { id: 'cpp', name: 'ČPP', prods: [{ id: 'max', name: 'Maximum Life (1-7 let max)', z: 11.667 }, { id: 'filip', name: 'ŽP s Filipem PLUS', z: 5.357 }, { id: 'hosp', name: 'Hospitalizace (na 1000 Kč)', z: 1.071, base: 1000 }, { id: 'auto', name: 'Pojištění vozidel', z: 6.429 }, { id: 'zaruka', name: 'Záruka pro případ úpadku CK', z: 3.036 }, { id: 'majetek', name: 'Občanské majetkové pojištění', z: 17.857 }, { id: 'simplex', name: 'SIMPLEX', z: 7.143 }, { id: 'podnik', name: 'Podnikatelské majetkové a Odpov.', z: 5.357 }, { id: 'mazlik', name: 'Mazlík', z: 7.143 }] },
+            { id: 'das', name: 'D. A. S.', prods: [{ id: 'pravni', name: 'Pojištění právní ochrany', z: 7.143 }] },
+            { id: 'direct', name: 'DIRECT pojišťovna', prods: [{ id: 'auto', name: 'Pojištění vozidel', z: 6.429 }, { id: 'majetek', name: 'Občanský majetek', z: 17.857 }, { id: 'odp', name: 'Odpovědnost zaměstnance', z: 5.357 }, { id: 'uraz', name: 'Úrazové pojištění', z: 7.143 }, { id: 'cest', name: 'Cestovní pojištění', z: 3.571 }, { id: 'mazlicci', name: 'Pojištění mazlíčků', z: 5.357 }, { id: 'stav', name: 'Stavebně montážní', z: 6.429 }, { id: 'ostatni', name: 'Ostatní majetkové', z: 5.357 }] },
+            { id: 'ergo', name: 'ERGO', prods: [{ id: 'cest', name: 'Cestovní pojištění', z: 5.357 }] },
+            { id: 'europ', name: 'Europ Assistance', prods: [{ id: 'mesic', name: 'AutoCare (měsíc)', z: 3.571 }, { id: 'rok', name: 'AutoCare / MotoCare (rok) / TravelCare', z: 7.143 }] },
+            { id: 'generali', name: 'Generali Česká pojišťovna', prods: [{ id: 'allegro_mala', name: 'Allegro 20 (malá rizika)', z: 10.714 }, { id: 'allegro_velka', name: 'Allegro 20 (velká rizika)', z: 25.000 }, { id: 'nemoc', name: 'Nemocenské pojištění', z: 10.714 }, { id: 'majetek', name: 'Můj majetek', z: 17.143 }, { id: 'odp', name: 'Odpovědnost zaměstnance', z: 17.143 }, { id: 'auto', name: 'Pojištění vozidel', z: 6.429 }, { id: 'cest', name: 'Cestovní pojištění', z: 4.286 }, { id: 'podnik', name: 'JISTOTA / Odpovědnost z provozní činnosti', z: 5.357 }, { id: 'mazlicek', name: 'Mazlíček (průměrná sazba)', z: 8.929 }] },
+            { id: 'komercni', name: 'Komerční pojišťovna', prods: [{ id: 'majetek', name: 'MAJETEK', z: 17.857 }, { id: 'cest', name: 'MojeCestování', z: 7.143 }] },
+            { id: 'koop', name: 'Kooperativa', prods: [{ id: 'flexi_mala', name: 'FLEXI (malá rizika)', z: 28.571 }, { id: 'flexi_velka', name: 'FLEXI (velká rizika)', z: 62.500 }, { id: 'auto', name: 'Vozidla NAMÍRU / Motorová vozidla', z: 6.429 }, { id: 'na100pro', name: 'NA 100 PRO (paušálně na kus)', z: 0.714, base: 1 }, { id: 'majetek', name: 'Pojištění majetku', z: 17.143 }, { id: 'odp', name: 'Odpovědnost zaměstnance / SVJ', z: 3.857 }, { id: 'podnik', name: 'Podnikatelská rizika / Odpov. zdravot.', z: 5.357 }, { id: 'pravni', name: 'Právní ochrana', z: 17.143 }, { id: 'mise', name: 'Úrazové poj. zahr. mise', z: 2.321 }] },
+            { id: 'pillow', name: 'Pillow', prods: [{ id: 'uraz', name: 'Úraz a nemoc', z: 25.000 }, { id: 'majetek', name: 'Pojištění majetku', z: 17.857 }, { id: 'auto', name: 'Vozidla a flotily', z: 6.429 }] },
+            { id: 'slavia', name: 'Slavia', prods: [{ id: 'majetek', name: 'ŠŤASTNÝ DOMOV', z: 17.857 }, { id: 'auto', name: 'Motorová vozidla', z: 6.429 }, { id: 'cest', name: 'Cestovní pojištění', z: 8.929 }] },
+            { id: 'union', name: 'Union poisťovňa', prods: [{ id: 'cest', name: 'Komplexní cestovní pojištění', z: 8.929 }] },
+            { id: 'uniqa', name: 'Uniqa', prods: [{ id: 'zivot_mala', name: 'Život a radost / Šťastný život (malá riz.)', z: 14.286 }, { id: 'zivot_velka', name: 'Život a radost / Šťastný život (velká riz.)', z: 25.000 }, { id: 'nemocnice', name: 'Individuální Nemocnice', z: 25.000 }, { id: 'med', name: 'Skupinové MedUNIQUA', z: 7.143 }, { id: 'auto', name: 'IPU, AiV, Flotily / Auto & pohoda', z: 6.429 }, { id: 'majetek', name: 'DOMOV Variant, Bezpečí, Top...', z: 17.857 }, { id: 'odp', name: 'Odpovědnost zaměstnance', z: 3.571 }, { id: 'zvire', name: 'Odpovědnost zvíře', z: 16.071 }, { id: 'cest', name: 'Cestovní pojištění', z: 8.929 }, { id: 'podnik', name: 'Podnikatelská rizika', z: 6.071 }, { id: 'odp_ost', name: 'Odpovědnost (dopravce, zdrav., soc...)', z: 5.357 }] }
+        ];
+        nezDataMap.sort((a, b) => a.name.localeCompare(b.name, 'cs'));
 
         // Data Úvěry
         const loanDataMap = [
@@ -653,12 +734,14 @@
 
         let invState = { inst: 'ambeat', prod: 'default', type: 'single', fee: 'expres', fund: 'akcie', phase: 'standard', uniqa: false, amountStr: '', durStr: '10', entStr: '' };
         let insState = { inst: 'allianz', prod: 'zivot', type: 'pwl', risk: 'velka', rpStr: '', rpiStr: '', durStr: '20' };
+        let nezState = { inst: 'axa', prod: 'cest', rpStr: '' }; // --- NOVÝ STAV PRO NEŽIVOT ---
         let loanState= { inst: 'artesa', prod: 'firemni', amtStr: '' };
         let penzState = { inst: 'allianz', type: 'dps_new', age: '30', amountPart: '', amountEmp: '', amountOneTime: '', conseqGarance: false, genFund: 'ostatni', nnFromTf: false, renteaOnline: false, allianzTfCut: false };
 
         let clientPlan = [];
         let currentInvestResult = null;
         let currentInsResult = null;
+        let currentNezResult = null; // --- NOVÝ VÝSLEDEK PRO NEŽIVOT ---
         let currentLoanResult = null;
         let currentPenzResult = null;
 
@@ -673,7 +756,7 @@
         // === TABS LOGIC ===
         function setAppMode(mode) {
             appMode = mode;
-            ['invest', 'penze', 'insurance', 'loans', 'plan'].forEach(m => {
+            ['invest', 'penze', 'insurance', 'nezivot', 'loans', 'plan'].forEach(m => { // Přidán 'nezivot'
                 const isMatch = m === mode;
                 document.getElementById(`section-${m}`).style.display = isMatch ? 'block' : 'none';
                 
@@ -682,6 +765,7 @@
                     if (m==='invest') btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-emerald-500 text-white shadow-md text-sm sm:text-base';
                     if (m==='penze') btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-teal-500 text-white shadow-md text-sm sm:text-base';
                     if (m==='insurance') btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-blue-600 text-white shadow-md text-sm sm:text-base';
+                    if (m==='nezivot') btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-sky-500 text-white shadow-md text-sm sm:text-base';
                     if (m==='loans') btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-amber-500 text-white shadow-md text-sm sm:text-base';
                     if (m==='plan') btn.className = 'px-3 sm:px-4 py-2.5 rounded-xl font-bold flex items-center transition-all bg-indigo-600 text-white shadow-md relative text-sm sm:text-base';
                 } else {
@@ -711,7 +795,13 @@
                 headerIconBg.className = 'p-3 rounded-xl shadow-lg bg-blue-600 shadow-blue-600/30';
                 headerIcon.setAttribute('data-lucide', 'calculator');
                 headerSubtitle.className = 'text-sm mt-0.5 font-medium text-blue-400';
-                headerSubtitle.textContent = 'Automatický výpočet pojištění';
+                headerSubtitle.textContent = 'Automatický výpočet pojištění (Život)';
+            } else if (mode === 'nezivot') { // --- ZMĚNA HLAVIČKY PRO NEŽIVOT ---
+                headerCard.className = 'p-6 text-white border-b flex items-center gap-4 transition-colors bg-slate-900 border-sky-800';
+                headerIconBg.className = 'p-3 rounded-xl shadow-lg bg-sky-500 shadow-sky-500/30';
+                headerIcon.setAttribute('data-lucide', 'umbrella');
+                headerSubtitle.className = 'text-sm mt-0.5 font-medium text-sky-400';
+                headerSubtitle.textContent = 'Automatický výpočet neživotního pojištění';
             } else if (mode === 'loans') {
                 headerCard.className = 'p-6 text-white border-b flex items-center gap-4 transition-colors bg-slate-900 border-amber-800';
                 headerIconBg.className = 'p-3 rounded-xl shadow-lg bg-amber-500 shadow-amber-500/30';
@@ -734,6 +824,7 @@
             if (type === 'invest' && currentInvestResult) itemToAdd = {...currentInvestResult};
             if (type === 'penze' && currentPenzResult) itemToAdd = {...currentPenzResult};
             if (type === 'insurance' && currentInsResult) itemToAdd = {...currentInsResult};
+            if (type === 'nezivot' && currentNezResult) itemToAdd = {...currentNezResult}; // Přidání pro Neživot
             if (type === 'loans' && currentLoanResult) itemToAdd = {...currentLoanResult};
 
             if (itemToAdd) {
@@ -782,6 +873,7 @@
                 let icon = 'trending-up', colorClass = 'text-emerald-600', bgClass = 'bg-emerald-50';
                 if (item.type === 'penze') { icon = 'piggy-bank'; colorClass = 'text-teal-600'; bgClass = 'bg-teal-50'; }
                 if (item.type === 'insurance') { icon = 'shield'; colorClass = 'text-blue-600'; bgClass = 'bg-blue-50'; }
+                if (item.type === 'nezivot') { icon = 'umbrella'; colorClass = 'text-sky-600'; bgClass = 'bg-sky-50'; } // Vizuál pro Neživot
                 if (item.type === 'loans') { icon = 'home'; colorClass = 'text-amber-600'; bgClass = 'bg-amber-50'; }
 
                 html += `
@@ -1078,7 +1170,7 @@
         });
         eInvFee.addEventListener('change', (e) => { invState.fee = e.target.value; renderInvest(); });
         document.getElementById('invFund').addEventListener('change', (e) => { invState.fund = e.target.value; renderInvest(); });
-       
+        
         document.getElementById('invUniqa').addEventListener('change', (e) => { 
             invState.uniqa = e.target.checked; 
             if(invState.uniqa) invState.amountStr = '';
@@ -1338,7 +1430,7 @@
         ePenzRenteaOnline.addEventListener('change', (e) => { penzState.renteaOnline = e.target.checked; renderPenz(); });
         ePenzAllianzTfCut.addEventListener('change', (e) => { penzState.allianzTfCut = e.target.checked; renderPenz(); });
 
-        // === POJIŠTĚNÍ LOGIKA ===
+        // === POJIŠTĚNÍ LOGIKA (Život) ===
         const eInsInst = document.getElementById('insInst');
         const eInsProd = document.getElementById('insProd');
         const eInsType = document.getElementById('insType');
@@ -1466,6 +1558,61 @@
         syncInputs('insDurStrNum1', 'insDurStrRange1', () => { insState.durStr = eInsDurStrNum1.value; renderInsurance(); });
         syncInputs('insDurStrNum2', 'insDurStrRange2', () => { insState.durStr = eInsDurStrNum2.value; renderInsurance(); });
 
+        // --- NOVÁ LOGIKA PRO NEŽIVOT ---
+        const eNezInst = document.getElementById('nezInst');
+        const eNezProd = document.getElementById('nezProd');
+        const eNezRpStr = document.getElementById('nezRpStr');
+
+        function updateNezOptions() {
+            const b = nezDataMap.find(x => x.id === nezState.inst) || nezDataMap[0];
+            populateSelect(eNezProd, b.prods);
+            if(!b.prods.find(p => p.id === nezState.prod)) nezState.prod = b.prods[0].id;
+            eNezProd.value = nezState.prod;
+
+            // Změna textu labelu u NA 100 PRO (platí se na kusy, ne jako roční pojistné)
+            const prd = b.prods.find(p => p.id === nezState.prod) || b.prods[0];
+            if (prd.base === 1) {
+                document.getElementById('nezRpLabel').textContent = "Počet sjednaných kusů";
+                document.getElementById('nezBaseSpan').textContent = "1";
+                document.getElementById('nezBaseText').textContent = "sjednaný kus";
+            } else {
+                document.getElementById('nezRpLabel').textContent = "Roční pojistné (Kč)";
+                document.getElementById('nezBaseSpan').textContent = fC(prd.base || 10000, 0);
+                document.getElementById('nezBaseText').textContent = "Kč ročního pojistného";
+            }
+        }
+
+        function renderNezivot() {
+            const amount = parseFloat(nezState.rpStr) || 0;
+            const bnk = nezDataMap.find(b => b.id === nezState.inst) || nezDataMap[0];
+            const prd = bnk.prods.find(p => p.id === nezState.prod) || bnk.prods[0];
+            
+            let zC = prd.z; 
+            let kC = prd.k || prd.z; // U neživotu se obvykle kariéra rovná získatelským BJ
+            let bs = prd.base || 10000;
+            
+            let zRes = (amount / bs) * zC; 
+            let kRes = (amount / bs) * kC;
+
+            document.getElementById('nezResZ').textContent = fC(zRes);
+            document.getElementById('nezResK').textContent = fC(kRes);
+            
+            if (bs === 1) {
+                document.getElementById('nezCtrlBaseVal').textContent = `${fC(amount, 0)} ks`;
+            } else {
+                document.getElementById('nezCtrlBaseVal').textContent = `${fC(amount, 0)} Kč`;
+            }
+            
+            document.getElementById('nezCtrlZCoef').textContent = fC(zC);
+
+            currentNezResult = { type: 'nezivot', title: `Neživot: ${bnk.name}`, subtitle: `${prd.name}`, bj: zRes, kbj: kRes };
+        }
+
+        eNezInst.addEventListener('change', (e) => { nezState.inst = e.target.value; nezState.rpStr = ''; updateNezOptions(); renderNezivot(); });
+        eNezProd.addEventListener('change', (e) => { nezState.prod = e.target.value; updateNezOptions(); renderNezivot(); });
+        eNezRpStr.addEventListener('input', (e) => { nezState.rpStr = e.target.value; renderNezivot(); });
+
+
         // === ÚVĚRY LOGIKA ===
         const eLoanInst = document.getElementById('loanInst');
         const eLoanProd = document.getElementById('loanProd');
@@ -1501,8 +1648,10 @@
         // INICIALIZACE
         populateSelect(ePenzInst, [{v: 'allianz', l: 'Allianz'}, {v: 'conseq', l: 'Conseq'}, {v: 'generali', l: 'Generali'}, {v: 'nn', l: 'NN'}, {v: 'rentea', l: 'Rentea'}, {v: 'uniqa', l: 'Uniqa'}]);
         populateSelect(eLoanInst, loanDataMap);
-        updateInvOptions(); updatePenzOptions(); updateInsOptions(); updateLoanOptions();
-        setAppMode('invest'); renderInvest(); renderPenz(); renderInsurance(); renderLoans(); renderPlan();
+        populateSelect(eNezInst, nezDataMap); // Inicializace Neživot pojišťoven
+        
+        updateInvOptions(); updatePenzOptions(); updateInsOptions(); updateNezOptions(); updateLoanOptions();
+        setAppMode('invest'); renderInvest(); renderPenz(); renderInsurance(); renderNezivot(); renderLoans(); renderPlan();
 
     </script>
 
@@ -1616,11 +1765,11 @@
                 // REGISTRACE - Volitelná kontrola koncovky @partners.cz
                 // Pokud bys chtěl lidem striktně ZAKÁZAT použití jiného e-mailu, 
                 // můžeš odkomentovat následující 4 řádky:
-                /*
+                
                 if (!email.toLowerCase().endsWith('@partners.cz')) {
                     throw { code: 'custom/not-partners-email' };
                 }
-                */
+                
                 
                 await createUserWithEmailAndPassword(auth, email, password);
             }
